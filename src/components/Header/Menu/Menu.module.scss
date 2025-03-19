@@ -1,0 +1,19 @@
+.menu{
+    &__items{
+        display: flex;
+        &_item{
+            cursor: pointer;
+            padding: 20px 0px;
+        }
+        &_item a{
+            padding: 0px 10px;
+            color: black;
+        }
+        &_item:not(:last-child) a{
+            border-right: 3px solid black;
+        }
+        .active{
+            font-weight: bold;
+        }
+    }
+}

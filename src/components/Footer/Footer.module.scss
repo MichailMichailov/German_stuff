@@ -1,0 +1,12 @@
+.Footer{
+    &__content{
+        padding: 15px 0px;
+        display: flex;
+        justify-content: end;
+        &_date{
+            display: inline-block;
+            font-size: 25px;
+            font-weight: bold;
+        }
+    }
+}
