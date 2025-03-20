@@ -4,11 +4,13 @@ import logo from '../../assets/img/Uhlig-Logo-Rechteck1.png'
 import { Menu } from './Menu/Menu';
 import { connect } from 'react-redux'
 import { setParagraphThunk } from '../../redux/reducers/uiReducers';
+import { logOutThunk } from '../../redux/reducers/authReducer';
 
 
 interface PropsType {
     numOfParagraph: number
-    setParagraphThunk: (num: number) => void
+    setParagraphThunk: (num: number) => void,
+    logOutThunk: ()=>void
 }
 
 export const Header: FC<PropsType> = (props) => {
@@ -27,7 +29,7 @@ export const Header: FC<PropsType> = (props) => {
 
                     <div className={st.Header__content_right}>
                         <div className={st.btnLogaut}>
-                            <div className="">Logout</div>
+                            <div className="" onClick={() => { props.logOutThunk() }}>Logout</div>
                         </div>
                     </div>
                 </div>
@@ -40,4 +42,4 @@ const mapStateToProps = (state: any) => ({
     numOfParagraph: state.ui.menuParagrph
 })
 
-export const RealHeader = connect(mapStateToProps, { setParagraphThunk })(Header)
+export const RealHeader = connect(mapStateToProps, { logOutThunk, setParagraphThunk })(Header)

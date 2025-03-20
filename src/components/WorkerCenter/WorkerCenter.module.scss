@@ -1,0 +1,124 @@
+.workerCenter{
+    height: 100vh;
+}
+.wHeader{
+    border-bottom: 1px solid black ;
+    position: relative;
+    &__img{
+        width: 30%;
+        margin: 10px auto;
+    }
+    &__logOut{
+        cursor: pointer;
+        position: absolute;
+        font-size: 20px;
+        right: 40px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+}
+
+.wMain {
+    padding: 20px;
+
+    &__title {
+        font-size: 35px;
+        text-align: center;
+    }
+
+    &__info {
+        &_date {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        &_lists{
+            display: flex;
+        }
+        &_noties{
+
+        }
+    }
+}
+.chose{
+    padding: 10px 0px;
+    &__container{
+        display: flex;
+        align-items: center;
+        &_text{
+            font-size: 18px;
+            margin-right: 10px;
+        }
+        &_select{
+            width: 15vw;
+            select{
+                text-align: center;
+                font-size: 16px;
+                width: 100%;
+                padding: 5px;
+            }
+        }
+    }
+}
+
+.list{
+    margin-right: 50px;
+    &__title{
+        font-weight: bold;
+        font-size: 25px;
+        margin-bottom: 20px;
+    }
+    &__body{
+        ul{
+            li{
+                margin: 10px 0;
+                display: flex;
+                align-items: center;
+                label{
+                    input{
+                        appearance: none;
+                        width: 16px;
+                        height: 16px;
+                        border: 2px solid #4caf50;
+                        border-radius: 4px;
+                        position: relative;
+                        cursor: pointer;
+                        margin-right: 10px;
+                        border-radius: 50%;
+                        &:checked {
+                            background-color: #4caf50;
+                            border: none;
+                        }
+                        &:checked::after {
+                            content: "✔";
+                            font-size: 14px;
+                            color: white;
+                            position: absolute;
+                            top: -1px;
+                            left: 2px;
+                          }
+                    }
+                }
+            }
+        }
+    }
+
+}
+
+.noties{
+    &__title{
+        font-weight: bold;
+        font-size: 25px;
+        margin-bottom: 20px;
+    }
+    &__text{
+        textarea{
+            width: 100%;
+            min-height: 100px;
+        }
+    }
+    &__btn{
+        margin: 10px 0px;
+        display: flex;
+        justify-content: center;
+    }
+}

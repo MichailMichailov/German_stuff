@@ -16,6 +16,7 @@ export const Main: FC<PropsType> = (props) =>{
         <main className={st.Main}>
 
             <Routes>
+                <Route path='/' element={<Dashboard/>}/>
                 <Route path='/dashboard' element={<Dashboard/>}/>
                 <Route path='/arbeitsplane' element={<Arbeitsplane/>}/>
                 <Route path='/kunden' element={<Kunden/>}/>
