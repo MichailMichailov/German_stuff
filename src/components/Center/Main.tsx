@@ -5,6 +5,9 @@ import st from './Main.module.scss'
 import { Dashboard } from "./Dashboard/Dashboard";
 import { Arbeitsplane } from "./Arbeitsplane/Arbeitsplane";
 import { Kunden } from "./Kunden/Kunden";
+import { Leistungen } from "./Leistungen/Leistungen";
+import { Mitarbeiter } from "./Mitarbeiter/Mitarbeiter";
+import { Material } from "./Material/Material";
 
 
 interface PropsType{
@@ -20,6 +23,9 @@ export const Main: FC<PropsType> = (props) =>{
                 <Route path='/dashboard' element={<Dashboard/>}/>
                 <Route path='/arbeitsplane' element={<Arbeitsplane/>}/>
                 <Route path='/kunden' element={<Kunden/>}/>
+                <Route path='/leistungen' element={<Leistungen/>}/>
+                <Route path='/mitarbeiter' element={<Mitarbeiter/>}/>
+                <Route path='/material' element={<Material/>}/>
                 
                 {/* <Route path='/' element={<RealMainPage setPar={props.setParagraphThunk}/>} />
                 <Route path='/profile/:userId?' element={<RealProfile setPar={props.setParagraphThunk} />} />

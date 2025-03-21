@@ -11,17 +11,15 @@ export const Kunden: FC<PropsType> = (props) => {
         <div className={st.Kunden}>
             <div className={st.Kunden__content + ' container'}>
                 <div className={st.Kunden__content_left}>
-                    <div className={st.employees}>
-                        <div className={st.employees__title + ' title'}>Kunden</div>
-                        <div className={st.employees__list}>
+                    <div className={st.employees + ' list'}>
+                        <div className='list__title'>Kunden</div>
                             <ul>
                                 <li>lorem</li>
                                 <li>lorem</li>
-                                <li className={st.choose}>lorem</li>
+                                <li className='list__choose'>lorem</li>
                                 <li>lorem</li>
                                 <li>lorem</li>
                             </ul>
-                        </div>
                     </div>
                 </div>
                 <div className={st.Kunden__content_right}>

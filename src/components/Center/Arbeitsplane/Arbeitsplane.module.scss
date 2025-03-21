@@ -12,12 +12,10 @@
 
         &_right {
             flex-grow: 1;
-            padding: 60px 0px 0px 30px;
+            padding: 50px 0px 0px 30px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            &_top{}
-            &_bottom{}
         }
     }
 
@@ -26,16 +24,10 @@
 
 .employees {
     margin-right: 100px;
-
-    &__title {
-        margin: 10px 0px;
-    }
-
-    &__list {
-        li {
-            padding: 0px 0px 5px 20px;
+    &__body{
+        li.item {
+            padding: 5px 20px;
             position: relative;
-
             &::before {
                 content: '';
                 display: block;
@@ -49,28 +41,19 @@
                 transform: translateY(-50%);
             }
         }
-
-        li.choose {
-            font-weight: bold;
-        }
-
     }
+   
 }
 
 
 .list {
-    &__title {
-        margin-bottom: 10px;
-    }
-
     &__list {
-        li {
-            padding-left: 30px; // Отступ для маркера
-            padding-bottom: 7px;
+        li.item {
+            padding:7px 0px 7px 30px;
             position: relative;
 
             &.check::before {
-                content: '✔'; // Юникод галочки
+                content: '✔'; 
                 font-size: 14px;
                 color: white;
                 background-color: rgb(11, 172, 11);
@@ -83,11 +66,11 @@
                 left: 0;
                 top: 50%;
                 transform: translateY(-50%);
-                border-radius: 50%; // Делаем круг
+                border-radius: 50%; 
             }
 
             &.cross::before {
-                content: '✖'; // Юникод крестика
+                content: '✖'; 
                 font-size: 14px;
                 color: red;
                 border: 3px solid red;
@@ -101,15 +84,37 @@
                 left: 0;
                 top: 50%;
                 transform: translateY(-50%);
-                border-radius: 3px; // Делаем квадрат с лёгким скруглением
+                border-radius: 3px; 
             }
         }
     }
 }
 
+.data{
+    display: flex;
+    justify-content: end;
+    &__container{
+        display: flex;
+        align-items: center;
+        &_text{
+            font-size: 18px;
+            margin-right: 10px;
+        }
+        &_select{
+            width: 15vw;
+            select{
+                text-align: center;
+                font-size: 16px;
+                width: 100%;
+                padding: 5px;
+            }
+        }
+    }
+}
 .btns{
     display: flex;
     justify-content: end;
+    margin-bottom: 20px;
     &__item{
         margin-left: 10px;
     }
