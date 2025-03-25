@@ -8,91 +8,109 @@ const instance = axios.create({
 
 
 export const authApi = {
-    logAuth(login:string, password:string){
-        // return instance.post('',{login, password})
-        if(login == 'admin'){
-            return(users[0])
-        }else{
-            return(users[1])
+    logAuth(login: string, password: string) {
+        // return instance.get('/loginEndpoint',{login, password}).then(response=>response.data)
+        if (login == 'admin') {
+            return (users[0])
+        } else {
+            return (users[1])
         }
     }
 
 }
 
 export const workerApi = {
-    getWorkerById(id:string){
-        // return instance.post('',{login, password})
+    getWorkerById(id: string) {
+        // return instance.get('endpoint/'+id).then(response=>response.data)
         return workerById
     },
-    updateWorker(data:any){
-        // return instance.post('',data)
+    updateWorker(data: any) {
+        // return instance.put('endpoint/'+id,{data}).then(response=>response.data)
         return 0
     }
 }
 
 export const adminApi = {
-    getArbitplansByData(data:string){
+    getArbitplansByData(data: string) {
+        // return instance.get('endpoint/',{data}).then(response=>response.data)
         return Arbeitsplane
     },
-    getFromDashboard(dataFrom:string, dataTo:string){
+    getFromDashboard(dataFrom: string, dataTo: string) {
+        // return instance.get('endpoint/',{dataFrom, dataTo}).then(response=>response.data)
         return dashboardData
     }
 }
 
 export const kundenApi = {
-    getAllKunden(){
+    getAllKunden() {
+        // return instance.get('endpoint').then(response=>response.data)
         return kunden
     },
-    changeKundenById(id:string, body:any){
+    changeKundenById(id: string, body: any) {
+        // return instance.put('endpoint/'+id, {body}).then(response=>response.data)
         return kunden
     },
-    addKunden( body:any){
+    addKunden(body: any) {
+        // return instance.post('endpoint/', {body}).then(response=>response.data)
         return [...kunden, body]
     },
-    deleteKundenByid( id:string){
+    deleteKundenByid(id: string) {
+        // return instance.delete('endpoint/'+id).then(response=>response.data)
         return kunden.filter(s => s.id !== id)
     }
 }
 
 export const SolutionsApi = {
-    getSolutions(){
+    getSolutions() {
+        // return instance.get('endpoint').then(response=>response.data)
         return solutionsFull
     },
-    addSolution(body:any){
+    addSolution(body: any) {
+        // return instance.post('endpoint/', {body}).then(response=>response.data)
         return [...solutionsFull, body]
     },
-    changeSolutionById(id:string, body:any){
+    changeSolutionById(id: string, body: any) {
+        // return instance.put('endpoint/'+id, {body}).then(response=>response.data)
         return solutionsFull
     },
-    deleteSolutionById(id:string){
+    deleteSolutionById(id: string) {
+        // return instance.delete('endpoint/'+id).then(response=>response.data)
         return solutionsFull.filter(s => s.id !== id)
     }
 }
 export const materialApi = {
-    getMaterials(){
+    getMaterials() {
+        // return instance.get('endpoint').then(response=>response.data)
         return materials
     },
-    addMaterial(body:any){
+    addMaterial(body: any) {
+        // return instance.post('endpoint/', {body}).then(response=>response.data)
         return [...materials, body]
     },
-    changeMaterialById(id:string, body:any){
+    changeMaterialById(id: string, body: any) {
+        // return instance.put('endpoint/'+id, {body}).then(response=>response.data)
         return materials
     },
-    deleteMaterialById(id:string){
+    deleteMaterialById(id: string) {
+        // return instance.delete('endpoint/'+id).then(response=>response.data)
         return materials.filter(s => s.id !== id)
     }
 }
 export const worerApi = {
-    getWorkers(){
+    getWorkers() {
+        // return instance.get('endpoint').then(response=>response.data)
         return allWorkersData
     },
-    addWorker(body:any){
+    addWorker(body: any) {
+        // return instance.post('endpoint/', {body}).then(response=>response.data)
         return [...allWorkersData, body]
     },
-    changeWorkerById(id:string, body:any){
+    changeWorkerById(id: string, body: any) {
+        // return instance.put('endpoint/'+id, {body}).then(response=>response.data)
         return allWorkersData
     },
-    deleteWorkerById(id:string){
+    deleteWorkerById(id: string) {
+        // return instance.delete('endpoint/'+id).then(response=>response.data)
         return allWorkersData.filter(s => s.id !== id)
     }
 }
