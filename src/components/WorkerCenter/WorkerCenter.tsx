@@ -1,86 +1,117 @@
-import { FC, useEffect, useState } from 'react'
-import { connect } from 'react-redux'
-import st from './WorkerCenter.module.scss'
-import logo from '../../assets/img/Uhlig-Logo-Rechteck1.png'
-import { logOutThunk } from '../../redux/reducers/authReducer'
+import { FC, useEffect, useState } from "react";
+import { connect } from "react-redux";
+import st from "./WorkerCenter.module.scss";
+import logo from "../../assets/img/Uhlig-Logo-Rechteck1.png";
+import { logOutThunk } from "../../redux/reducers/authReducer";
+import { getCurrentData } from "../common/functions";
+import { updateWorkerThunk } from "../../redux/reducers/workerReducer";
+import { Preload } from "../common/preload/preload";
 
+interface PropsTypeList {
+    selectedId: number;
+    listOfSome: { Name: string; Status: boolean }[];
+    title: string;
+    onUpdate: (newList: { Name: string; Status: boolean }[]) => void;
+}
+
+const ListForWorker: FC<PropsTypeList> = ({ selectedId, listOfSome, title, onUpdate }) => {
+    const [instruments, setInstruments] = useState(listOfSome);
+    useEffect(() => { setInstruments(listOfSome); }, [selectedId, listOfSome]);
+    const handleCheckboxChange = (index: number) => {
+        const newList = instruments.map((item, i) => i === index ? { ...item, Status: !item.Status } : item);
+        setInstruments(newList);
+        onUpdate(newList);
+    };
+
+    return (
+        <div className={st.list}>
+            <div className={st.list__title}>{title}</div>
+            <div className={st.list__body}>
+                <ul>
+                    {instruments.map((w, i) => (
+                        <li key={w.Name}>
+                            <label>
+                                <input type="checkbox" checked={w.Status} onChange={() => handleCheckboxChange(i)} /> {w.Name}
+                            </label>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </div>
+    );
+};
 
 interface PropsTypeAdmin {
-    logOutThunk: ()=>void
+    logOutThunk: () => void;
+    updateWorkerThunk:(data:any)=>void;
+    data: {
+        id: number; Name: string; Note: string;
+        listOfInstrument: { Name: string; Status: boolean }[];
+        ListOfWork: { Name: string; Status: boolean }[];
+    }[];
+    login:string
 }
 
 export const WorkerCenter: FC<PropsTypeAdmin> = (props) => {
-    const [name, setName] = useState("Gabriel Becker");
-    const date = new Date();
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-    const formattedDate = `${day}.${month}.${year}`
+    const [selectedId, setSelectedId] = useState<number>(0);
+    const [name, setName] = useState<string>(props.login);
+    const [note, setNote] = useState<string>(props.data[selectedId].Note);
+    const [listOfWork, setListOfWork] = useState(props.data[selectedId].ListOfWork);
+    const [listOfInstrument, setListOfInstrument] = useState(props.data[selectedId].listOfInstrument);
+    const formattedDate = getCurrentData();
+    const changeClient = (id: number) => {
+        setSelectedId(id);
+        setNote(props.data[id].Note);
+        setListOfWork(props.data[id].ListOfWork);
+        setListOfInstrument(props.data[id].listOfInstrument);
+    };
+    const updateListOfWork = (newList: { Name: string; Status: boolean }[]) => setListOfWork(newList);
+    const updateListOfInstrument = (newList: { Name: string; Status: boolean }[]) => setListOfInstrument(newList);
+    const handleSave = async() => {
+        const finalData = {
+            selectedId: props.data[selectedId].id,
+            name: props.data[selectedId].Name,
+            note, listOfWork, listOfInstrument,
+        };
+        props.updateWorkerThunk(finalData)
+    };
+
     return (
         <div className={st.workerCenter}>
             <header className={st.wHeader}>
-                <div className={st.wHeader__img}>
-                    <img src={logo} alt="" />
-                </div>
-                <div className={st.wHeader__logOut} onClick={() => { props.logOutThunk() }}>LogOut</div>
+                <div className={st.wHeader__img}> <img src={logo} alt="Logo" /> </div>
+                <div className={st.wHeader__logOut} onClick={props.logOutThunk}> LogOut </div>
             </header>
             <main className={st.wMain}>
                 <div className="container">
-                    <h3 className={st.wMain__title}> Hallo {name} </h3>
+                    <h3 className={st.wMain__title}>Hallo {name}</h3>
                     <div className={st.chose}>
                         <div className={st.chose__container}>
                             <div className={st.chose__container_text}>Kunde wählen:</div>
                             <div className={st.chose__container_select}>
-                                <select name="" id="">
-                                    <option value="">VenomTech Solutions</option>
+                                <select value={selectedId} onChange={(e) => changeClient(parseInt(e.target.value))}>
+                                    {props.data.map((c, i) => (
+                                        <option key={c.id} value={i}> {c.Name} </option>
+                                    ))}
                                 </select>
                             </div>
                         </div>
                     </div>
+
                     <div className={st.wMain__info}>
                         <div className={st.wMain__info_date}>Heutiges Datum: {formattedDate}</div>
                         <div className={st.wMain__info_lists}>
-                            <div className={st.list}>
-                                <div className={st.list__title}>Tätigkeiten</div>
-                                <div className={st.list__body}>
-                                    <ul>
-                                        <li><label htmlFor="">
-                                            <input type="checkbox" name="" id="" />Name of item
-                                        </label></li>
-                                        <li><label htmlFor="">
-                                            <input type="checkbox" name="" id="" />Name of item
-                                        </label></li>
-                                        <li><label htmlFor="">
-                                            <input type="checkbox" name="" id="" />Name of item
-                                        </label></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div className={st.list}>
-                                <div className={st.list__title}>Genutzte Geräte</div>
-                                <div className={st.list__body}>
-                                    <ul>
-                                        <li><label htmlFor="">
-                                            <input type="checkbox" name="" id="" />Name of item
-                                        </label></li>
-                                        <li><label htmlFor="">
-                                            <input type="checkbox" name="" id="" />Name of item
-                                        </label></li>
-                                        <li><label htmlFor="">
-                                            <input type="checkbox" name="" id="" />Name of item
-                                        </label></li>
-                                    </ul>
-                                </div>
-                            </div>
+                            <ListForWorker listOfSome={listOfWork} selectedId={selectedId}
+                                title="Tätigkeiten" onUpdate={updateListOfWork} />
+                            <ListForWorker listOfSome={listOfInstrument} selectedId={selectedId}
+                                title="Genutzte Geräte" onUpdate={updateListOfInstrument} />
                         </div>
                         <div className={st.wMain__info_noties}>
                             <div className={st.noties}>
                                 <h3 className={st.noties__title}>Notizen</h3>
-                                <div className={st.noties__text}>
-                                    <textarea name="" id=""></textarea>
-                                </div>
+                                <div className={st.noties__text}> <textarea value={note} onChange={(e) => setNote(e.target.value)}></textarea> </div>
                                 <div className={st.noties__btn}>
-                                    <div className="btn">Speichern</div>
+                                    <div className="btn" onClick={handleSave}> Speichern </div>
                                 </div>
                             </div>
                         </div>
@@ -88,10 +119,12 @@ export const WorkerCenter: FC<PropsTypeAdmin> = (props) => {
                 </div>
             </main>
         </div>
-    )
-}
+    );
+};
 
 const mapStateToProps = (state: any) => ({
-})
+    login: state.auth.user.login,
+    data: state.worker.data,
+});
 
-export const RealWorkerCenter = connect(mapStateToProps, { logOutThunk })(WorkerCenter)
+export const RealWorkerCenter = connect(mapStateToProps, { logOutThunk, updateWorkerThunk })(WorkerCenter);

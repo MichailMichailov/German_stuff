@@ -1,4 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { authApi } from '../../api/api'
+import { setIsFetching, setParagraphThunk } from './uiReducers'
+import { setWorkerByIdThunk } from './workerReducer'
 
 
 type actionType = {
@@ -33,21 +36,18 @@ export const { setUser }= authSlice.actions
 export const authReducer = authSlice.reducer
 
 
-export const registrationThunk  = (login:string, password:string)=>{
-    return async (dispatch: Function) => {
-        
-        return 0
-    }
-}
-
 export const logInThunk = (login:string, password:string)=>{
     return async (dispatch: Function) => {
-        if(login == 'admin'){
-            dispatch(setUser({login:'Admin',role:'admin'}))
-        }else{
-            dispatch(setUser({login:'Gabriel',role:'worker'}))
-        }
-        dispatch(setIsAuth(true))
+        dispatch(setIsFetching(true))
+        const result = await authApi.logAuth(login, password)
+        if(result){
+            dispatch(setIsAuth(true))
+            dispatch(setUserId(result.id))
+            dispatch(setUser({login:result.name, role:result.role}))
+            if (result.role == 'worker')
+                dispatch(setWorkerByIdThunk(result.id))
+        } 
+        dispatch(setIsFetching(false))
         return 1
     }
 }

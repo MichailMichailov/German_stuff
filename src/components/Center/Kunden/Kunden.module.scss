@@ -34,16 +34,24 @@
     }
 }
 
+.form{
+    max-width: 100%;
+    fieldset{
+        div{
+            width: 100%;
+            padding: 5px;
+        }
+    }
+    &__btns{
+        justify-content: end;
+    }
+}
+
 .table{
     &__title{
         margin-bottom: 10px;
     }
     table{
-        colgroup {
-            col:nth-child(1) { width: 80%; }
-            col:nth-child(2) { width: 15%; }
-            col:nth-child(3) { width: auto; } // Остаток пространства
-          }
         tbody{
             tr{
                 td{
@@ -52,6 +60,11 @@
                         width: 25px;
                         cursor: pointer;
                         margin: 0px auto;
+                    }
+                    select{
+                        width: 90%;
+                        padding: 10px 5px ;
+                        border-radius: 5px;
                     }
                 }
                 td:first-child{
@@ -63,6 +76,8 @@
 
     &__btnAdd{
         margin-top: 20px;
+        display: flex;
+        justify-content: space-between;
         &_btn{
             cursor: pointer;
             width: 50px;

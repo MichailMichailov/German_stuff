@@ -7,6 +7,7 @@ import { Footer } from './Footer/Footer'
 import { withRouter } from '../hooks/withRoute'
 import { RealLogIn } from './Autorization/logIn'
 import { RealWorkerCenter } from './WorkerCenter/WorkerCenter'
+import { Preload } from './common/preload/preload'
 
 interface PropsTypeAdmin{
 }
@@ -33,6 +34,7 @@ interface PropsType{
 export const Content:FC<PropsType> = (props) => {
     return (
         <div className={st.content}>
+            {props.isFetching && <Preload/>}
             {props.isAuth?
                 props.user.role=='admin'?<ContentAdmin/>:<RealWorkerCenter/>
                 :<RealLogIn/>}

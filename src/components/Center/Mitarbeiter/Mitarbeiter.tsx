@@ -1,15 +1,40 @@
 import { Route, Routes } from "react-router-dom";
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import st from './Mitarbeiter.module.scss'
-
+import { connect } from "react-redux";
+import { addWorkerThunk, changeWorkerByIdThunk, deleteWorkerByIdThunk, getWorkersThunk } from "../../../redux/reducers/adminReducer";
 
 interface PropsType{
+    getWorkersThunk: () => void,
+    changeWorkerByIdThunk: (id: string, body: any) => void,
+    deleteWorkerByIdThunk: (id: string) => void,
+    addWorkerThunk: (body: any) => void,
+    workers: {
+        id: string; login: string; password: string;
+    }[]
 }
 
 export const Mitarbeiter: FC<PropsType> = (props) =>{
-
+    const [activId, setActivId] = useState("");
     const [login, setLogin] = useState("Mitarbeiter 2");
     const [pass, setPass] = useState("Old Description");
+    useEffect(() => {
+        const aFunc = async () => { await props.getWorkersThunk() }
+        aFunc()
+    }, []);
+    useEffect(() => {
+        const result = props.workers.find(k => k.id === activId);
+        if (result) {
+            setLogin(result.login)
+            setPass(result.password)
+        }
+    }, [activId])
+    const addWorker = async() =>{ await props.addWorkerThunk({login:'new Worker'})}
+    const deleteWorker = async() =>{ await props.deleteWorkerByIdThunk(activId) }
+    const handleSave = async() => {
+        const customerData = { login: login, password: pass};
+        await props.changeWorkerByIdThunk(activId, customerData)
+    };
     return (
         <div className={st.Mitarbeiter + ' partOfPanel'}>
             <div className='partOfPanel__content container'>
@@ -17,11 +42,12 @@ export const Mitarbeiter: FC<PropsType> = (props) =>{
                     <div className={st.list + ' list'}>
                         <div className='list__title'>Mitarbeiter</div>
                         <ul>
-                            <li>Mitarbeiter 1</li>
-                            <li className='list__choose'>Mitarbeiter 2</li>
-                            <li>Mitarbeiter 3</li>
+                            {props.workers.map(e=>(
+                                <li className={e.id == activId?'list__choose':''} 
+                                onClick={event => { setActivId(e.id) }}>{e.login}</li>
+                            ))}
                         </ul>
-                        <div className='list__btnAdd'>+</div>
+                        <div className='list__btnAdd' onClick={addWorker}>+</div>
                     </div>
                 </div>
 
@@ -43,12 +69,22 @@ export const Mitarbeiter: FC<PropsType> = (props) =>{
                             </div>
                         </fieldset>
                         <div className='btns'>
-                            <button className='btn'>Change</button>
-                            <button className='btn btnRed'>Delete</button>
+                            <button className='btn' type="button" onClick={handleSave}>Change</button>
+                            <button className='btn btnRed' type="button" onClick={deleteWorker}>Delete</button>
                         </div>
+                        <div className='panel adminForm__panel'>Daten gespeichert</div>
+                        
                     </form>
                 </div>
             </div>
         </div>
     )
 }
+
+const mapStateToProps = (state: any) => ({
+    workers:state.admin.workers
+});
+
+export const RealMitarbeiter = connect(mapStateToProps, { 
+    getWorkersThunk, changeWorkerByIdThunk, addWorkerThunk, deleteWorkerByIdThunk
+ })(Mitarbeiter);

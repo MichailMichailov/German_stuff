@@ -18,7 +18,7 @@ export const LogIn: FC<PropsType> = (props) => {
     const onSubmit = async () => {
         const result: number = await props.logInThunk(user, password)
         if (result === 1) {
-            navigate('/')
+            // navigate('/')
         } else {
             //    setError('Не верный логин или пароль')
         }

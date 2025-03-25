@@ -1,15 +1,44 @@
 import { Route, Routes } from "react-router-dom";
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import st from './Material.module.scss'
+import { addMaterialThunk, changeMaterialByIdThunk, deleteMaterialByIdThunk, getMaterialsThunk } from "../../../redux/reducers/adminReducer";
+import { connect } from "react-redux";
 
-
-interface PropsType{
+interface PropsType {
+    getMaterialsThunk: () => void,
+    changeMaterialByIdThunk: (id: string, body: any) => void,
+    deleteMaterialByIdThunk: (id: string) => void,
+    addMaterialThunk: (body: any) => void,
+    materials: {
+        id: string; name: string; description: string; menge: number; is_consumable: boolean;
+    }[]
 }
 
 export const Material: FC<PropsType> = (props) =>{
-
-    const [mName, setMName] = useState("Material 2");
-    const [pass, setPass] = useState("Old Description");
+    const [activId, setActivId] = useState("");
+    const [mName, setMName] = useState("");
+    const [desc, setdesc] = useState("");
+    const [menge, setMenge] = useState(0);
+    const [cons, setCons] = useState(false);
+    useEffect(() => {
+        const aFunc = async () => { await props.getMaterialsThunk() }
+        aFunc()
+    }, []);
+    useEffect(() => {
+        const result = props.materials.find(k => k.id === activId);
+        if (result) {
+            setMName(result.name)
+            setdesc(result.description)
+            setMenge(result.menge)
+            setCons(result.is_consumable)
+        }
+    }, [activId])
+    const addMaterial = async() =>{ await props.addMaterialThunk({name:'new Material'})}
+    const deleteMaterial = async() =>{ await props.deleteMaterialByIdThunk(activId) }
+    const handleSave = async() => {
+        const customerData = { name: mName, description: desc, menge: menge, is_consumable: cons};
+        await props.changeMaterialByIdThunk(activId, customerData)
+    };
     return (
         <div className={st.Material + ' partOfPanel'}>
             <div className='partOfPanel__content container'>
@@ -17,11 +46,12 @@ export const Material: FC<PropsType> = (props) =>{
                     <div className={st.list + ' list'}>
                         <div className='list__title'>Material</div>
                         <ul>
-                            <li>Material 1</li>
-                            <li className='list__choose'>Material 2</li>
-                            <li>Material 3</li>
+                            {props.materials.map(e=>(
+                                <li className={e.id == activId?'list__choose':''} 
+                                onClick={event => { setActivId(e.id) }}>{e.name}</li>
+                            ))}
                         </ul>
-                        <div className='list__btnAdd'>+</div>
+                        <div className='list__btnAdd' onClick={addMaterial}>+</div>
                     </div>
                 </div>
 
@@ -38,31 +68,41 @@ export const Material: FC<PropsType> = (props) =>{
                         <fieldset>
                             <div className=""><label htmlFor="pass">Mterial Description</label></div>
                             <div className="">
-                                <input type="text" id="pass" value={pass}
-                                    onChange={(e) => setPass(e.target.value)} required />
+                                <input type="text" id="pass" value={desc}
+                                    onChange={(e) => setdesc(e.target.value)} required />
                             </div>
                         </fieldset>
                         <fieldset>
                             <div className=""><label htmlFor="pass">Avaliable Count</label></div>
                             <div className="">
-                                <input type="text" id="pass" value={pass}
-                                    onChange={(e) => setPass(e.target.value)} required />
+                                <input type="text" id="pass" value={menge}
+                                    onChange={(e) => setMenge(parseInt(e.target.value))} required />
                             </div>
                         </fieldset>
                         <fieldset>
                             <div className="adminForm__aInput">
-                                <input type="checkbox" id="pass" value={pass}
-                                    onChange={(e) => setPass(e.target.value)} />
+                                <input type="checkbox" id="pass" checked = {cons}
+                                    onChange={(e) => setCons(!cons)} />
                             </div>
                             <div className="adminForm__aLabel"><label htmlFor="pass">Is Consumable</label></div>
                         </fieldset>
                         <div className='btns'>
-                            <button className='btn'>Change</button>
-                            <button className='btn btnRed'>Delete</button>
+                            <button className='btn' type="button" onClick={handleSave}>Change</button>
+                            <button className='btn btnRed' type="button" onClick={deleteMaterial}>Delete</button>
                         </div>
+                        <div className='panel adminForm__panel'>Daten gespeichert</div>
+                        
                     </form>
                 </div>
             </div>
         </div>
     )
 }
+
+const mapStateToProps = (state: any) => ({
+    materials:state.admin.materials
+});
+
+export const RealMaterial = connect(mapStateToProps, { 
+    getMaterialsThunk, changeMaterialByIdThunk, addMaterialThunk, deleteMaterialByIdThunk
+ })(Material);

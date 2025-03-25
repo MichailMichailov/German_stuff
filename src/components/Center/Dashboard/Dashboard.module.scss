@@ -3,6 +3,16 @@
     table{
         margin-top: 20px;
     }
+    &__data{
+        padding: 20px 0px;
+        text-align: center;
+        input{
+            cursor: pointer;
+            text-align: center;
+            padding: 10px 20px;
+            font-size: 20px;
+        }
+    }
 }
 
 .pagination{
@@ -15,5 +25,14 @@
             margin: 0px 10px;
             padding: 5px 10px;
         }
+    }
+}
+
+.btns{
+    display: flex;
+    justify-content: end;
+    margin: 20px 0px;
+    &__item{
+        margin-left: 10px;
     }
 }

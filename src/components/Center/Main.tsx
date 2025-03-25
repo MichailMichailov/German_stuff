@@ -2,12 +2,12 @@ import { Route, Routes } from "react-router-dom";
 import { FC } from 'react'
 import st from './Main.module.scss'
 
-import { Dashboard } from "./Dashboard/Dashboard";
-import { Arbeitsplane } from "./Arbeitsplane/Arbeitsplane";
-import { Kunden } from "./Kunden/Kunden";
-import { Leistungen } from "./Leistungen/Leistungen";
-import { Mitarbeiter } from "./Mitarbeiter/Mitarbeiter";
-import { Material } from "./Material/Material";
+import { RealDashboard } from "./Dashboard/Dashboard";
+import { RealArbeitsplane } from "./Arbeitsplane/Arbeitsplane";
+import { RealKunden } from "./Kunden/Kunden";
+import { RealLeistungen } from "./Leistungen/Leistungen";
+import { RealMitarbeiter } from "./Mitarbeiter/Mitarbeiter";
+import { RealMaterial } from "./Material/Material";
 
 
 interface PropsType{
@@ -19,13 +19,13 @@ export const Main: FC<PropsType> = (props) =>{
         <main className={st.Main}>
 
             <Routes>
-                <Route path='/' element={<Dashboard/>}/>
-                <Route path='/dashboard' element={<Dashboard/>}/>
-                <Route path='/arbeitsplane' element={<Arbeitsplane/>}/>
-                <Route path='/kunden' element={<Kunden/>}/>
-                <Route path='/leistungen' element={<Leistungen/>}/>
-                <Route path='/mitarbeiter' element={<Mitarbeiter/>}/>
-                <Route path='/material' element={<Material/>}/>
+                <Route path='/' element={<RealDashboard/>}/>
+                <Route path='/dashboard' element={<RealDashboard/>}/>
+                <Route path='/arbeitsplane' element={<RealArbeitsplane/>}/>
+                <Route path='/kunden' element={<RealKunden/>}/>
+                <Route path='/leistungen' element={<RealLeistungen/>}/>
+                <Route path='/mitarbeiter' element={<RealMitarbeiter/>}/>
+                <Route path='/material' element={<RealMaterial/>}/>
                 
                 {/* <Route path='/' element={<RealMainPage setPar={props.setParagraphThunk}/>} />
                 <Route path='/profile/:userId?' element={<RealProfile setPar={props.setParagraphThunk} />} />
