@@ -2,14 +2,15 @@ import axios from 'axios'
 import { materials, workerById, users, Arbeitsplane, kunden, solutionsFull, allWorkersData, dashboardData } from '../data/TestData'
 
 const instance = axios.create({
-    // baseURL:'https://6523f436ea560a22a4e91c67.mockapi.io/users'
+    baseURL:'http://127.0.0.1:8000/',
+    headers: { "Content-Type": "application/json" }
     //withCredentials:true
 })
 
 
 export const authApi = {
-    logAuth(login: string, password: string) {
-        return instance.post('/loginEndpoint',{login, password}).then(response=>response.data)
+    async logAuth(login: string, password: string) {
+        return instance.post("api/login/", { login, password }).then(response=>response.data)
         // if (login == 'admin') {
         //     return (users[0])
         // } else {
@@ -21,12 +22,12 @@ export const authApi = {
 
 export const workerApi = {
     getWorkerById(id: string) {
-        return instance.get('endpoint/'+id).then(response=>response.data)
-        // return workerById
+        // return instance.get('endpoint/'+id).then(response=>response.data)
+        return workerById
     },
     updateWorker(id:string, data: any) {
-        return instance.put('endpoint/'+id,{data}).then(response=>response.data)
-        // return 0
+        // return instance.put('endpoint/'+id,{data}).then(response=>response.data)
+        return 0
     }
 }
 

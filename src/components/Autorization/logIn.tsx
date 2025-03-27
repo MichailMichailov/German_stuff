@@ -15,7 +15,8 @@ export const LogIn: FC<PropsType> = (props) => {
     const navigate = useNavigate()
     const [user, setUser] = useState("");
     const [password, setPassword] = useState("");
-    const onSubmit = async () => {
+    const onSubmit = async (event: React.FormEvent) => {
+        event.preventDefault();
         const result: number = await props.logInThunk(user, password)
         if (result === 1) {
             // navigate('/')
