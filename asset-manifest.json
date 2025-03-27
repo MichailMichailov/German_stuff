@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/static/css/main.830a4c0b.css",
+    "main.js": "/static/js/main.9530dc26.js",
+    "static/media/FuturaBookC-Italic.ttf": "/static/media/FuturaBookC-Italic.b4380750ffd157616b50.ttf",
+    "static/media/Uhlig-Logo-Rechteck1.png": "/static/media/Uhlig-Logo-Rechteck1.364da61fb525d102b7c6.png",
+    "static/media/trsh.png": "/static/media/trsh.ea5c2f03783ec889d860.png",
+    "index.html": "/index.html",
+    "main.830a4c0b.css.map": "/static/css/main.830a4c0b.css.map",
+    "main.9530dc26.js.map": "/static/js/main.9530dc26.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.830a4c0b.css",
+    "static/js/main.9530dc26.js"
+  ]
+}
