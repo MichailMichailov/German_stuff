@@ -10,7 +10,7 @@ const instance = axios.create({
 
 export const authApi = {
     async logAuth(login: string, password: string) {
-        return instance.post("api/login/", { login, password }).then(response=>response.data)
+        return instance.post("api/login/", { username: login, password: password }).then(response=>response.data)
         // if (login == 'admin') {
         //     return (users[0])
         // } else {
@@ -37,8 +37,8 @@ export const adminApi = {
         // return Arbeitsplane
     },
     getFromDashboard(dataFrom: string, dataTo: string) {
-        return instance.post('endpoint/',{dataFrom, dataTo}).then(response=>response.data)
-        // return dashboardData
+        // return instance.post('endpoint/',{dataFrom, dataTo}).then(response=>response.data)
+        return dashboardData
     }
 }
 
