@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/MichailMichailov/doicheStuka/static/css/main.d9c94889.css",
-    "main.js": "/MichailMichailov/doicheStuka/static/js/main.eda604bb.js",
-    "static/media/FuturaBookC-Italic.ttf": "/MichailMichailov/doicheStuka/static/media/FuturaBookC-Italic.b4380750ffd157616b50.ttf",
-    "static/media/Uhlig-Logo-Rechteck1.png": "/MichailMichailov/doicheStuka/static/media/Uhlig-Logo-Rechteck1.364da61fb525d102b7c6.png",
-    "static/media/trsh.png": "/MichailMichailov/doicheStuka/static/media/trsh.ea5c2f03783ec889d860.png",
-    "index.html": "/MichailMichailov/doicheStuka/index.html",
-    "main.d9c94889.css.map": "/MichailMichailov/doicheStuka/static/css/main.d9c94889.css.map",
-    "main.eda604bb.js.map": "/MichailMichailov/doicheStuka/static/js/main.eda604bb.js.map"
+    "main.css": "/doicheStuka/static/css/main.3e64ca15.css",
+    "main.js": "/doicheStuka/static/js/main.7b5f48b8.js",
+    "static/media/FuturaBookC-Italic.ttf": "/doicheStuka/static/media/FuturaBookC-Italic.b4380750ffd157616b50.ttf",
+    "static/media/Uhlig-Logo-Rechteck1.png": "/doicheStuka/static/media/Uhlig-Logo-Rechteck1.364da61fb525d102b7c6.png",
+    "static/media/trsh.png": "/doicheStuka/static/media/trsh.ea5c2f03783ec889d860.png",
+    "index.html": "/doicheStuka/index.html",
+    "main.3e64ca15.css.map": "/doicheStuka/static/css/main.3e64ca15.css.map",
+    "main.7b5f48b8.js.map": "/doicheStuka/static/js/main.7b5f48b8.js.map"
   },
   "entrypoints": [
-    "static/css/main.d9c94889.css",
-    "static/js/main.eda604bb.js"
+    "static/css/main.3e64ca15.css",
+    "static/js/main.7b5f48b8.js"
   ]
 }
