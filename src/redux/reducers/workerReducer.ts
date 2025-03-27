@@ -32,10 +32,10 @@ export const setWorkerByIdThunk  = (id:string)=>{
     }
 }
 
-export const updateWorkerThunk = (data:any)=>{
+export const updateWorkerThunk = (id:string, data:any)=>{
     return async (dispatch: Function) => {
         dispatch(setIsFetching(true))
-        await workerApi.updateWorker(data)
+        await workerApi.updateWorker(id, data)
         dispatch(setIsFetching(false))
     }
 }

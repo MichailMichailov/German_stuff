@@ -43,13 +43,14 @@ const ListForWorker: FC<PropsTypeList> = ({ selectedId, listOfSome, title, onUpd
 
 interface PropsTypeAdmin {
     logOutThunk: () => void;
-    updateWorkerThunk:(data:any)=>void;
+    updateWorkerThunk:(id:string, data:any)=>void;
     data: {
         id: number; Name: string; Note: string;
         listOfInstrument: { Name: string; Status: boolean }[];
         ListOfWork: { Name: string; Status: boolean }[];
     }[];
-    login:string
+    login:string,
+    id: string
 }
 
 export const WorkerCenter: FC<PropsTypeAdmin> = (props) => {
@@ -73,7 +74,7 @@ export const WorkerCenter: FC<PropsTypeAdmin> = (props) => {
             name: props.data[selectedId].Name,
             note, listOfWork, listOfInstrument,
         };
-        props.updateWorkerThunk(finalData)
+        props.updateWorkerThunk(props.id, finalData)
     };
 
     return (
@@ -125,6 +126,7 @@ export const WorkerCenter: FC<PropsTypeAdmin> = (props) => {
 const mapStateToProps = (state: any) => ({
     login: state.auth.user.login,
     data: state.worker.data,
+    id: state.auth.user.isAuth,
 });
 
 export const RealWorkerCenter = connect(mapStateToProps, { logOutThunk, updateWorkerThunk })(WorkerCenter);
