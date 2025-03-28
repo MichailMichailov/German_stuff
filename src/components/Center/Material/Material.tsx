@@ -5,13 +5,14 @@ import { addMaterialThunk, changeMaterialByIdThunk, deleteMaterialByIdThunk, get
 import { connect } from "react-redux";
 
 interface PropsType {
-    getMaterialsThunk: () => void,
-    changeMaterialByIdThunk: (id: string, body: any) => void,
-    deleteMaterialByIdThunk: (id: string) => void,
-    addMaterialThunk: (body: any) => void,
+    getMaterialsThunk: (token:string) => void,
+    changeMaterialByIdThunk: (token:string, id: string, body: any) => void,
+    deleteMaterialByIdThunk: (token:string, id: string) => void,
+    addMaterialThunk: (token:string, body: any) => void,
     materials: {
         id: string; name: string; description: string; menge: number; is_consumable: boolean;
-    }[]
+    }[],
+    token:string
 }
 
 export const Material: FC<PropsType> = (props) =>{
@@ -21,23 +22,31 @@ export const Material: FC<PropsType> = (props) =>{
     const [menge, setMenge] = useState(0);
     const [cons, setCons] = useState(false);
     useEffect(() => {
-        const aFunc = async () => { await props.getMaterialsThunk() }
+        const aFunc = async () => { await props.getMaterialsThunk(props.token) }
         aFunc()
     }, []);
     useEffect(() => {
         const result = props.materials.find(k => k.id === activId);
         if (result) {
-            setMName(result.name)
-            setdesc(result.description)
-            setMenge(result.menge)
-            setCons(result.is_consumable)
+            setMName(result.name?result.name:'')
+            setdesc(result.description?result.description:'')
+            setMenge(result.menge?result.menge:0 )
+            setCons(result.is_consumable?result.is_consumable:false)
+        }else{
+            setMName('')
+            setdesc('')
+            setMenge(0)
+            setCons(false)
         }
     }, [activId])
-    const addMaterial = async() =>{ await props.addMaterialThunk({name:'new Material'})}
-    const deleteMaterial = async() =>{ await props.deleteMaterialByIdThunk(activId) }
+    const addMaterial = async() =>{ await props.addMaterialThunk(props.token, {name:'new Material'})}
+    const deleteMaterial = async() =>{ 
+        await props.deleteMaterialByIdThunk(props.token, activId) 
+        setActivId('')
+    }
     const handleSave = async() => {
         const customerData = { name: mName, description: desc, menge: menge, is_consumable: cons};
-        await props.changeMaterialByIdThunk(activId, customerData)
+        await props.changeMaterialByIdThunk(props.token, activId, customerData)
     };
     return (
         <div className={st.Material + ' partOfPanel'}>
@@ -100,7 +109,8 @@ export const Material: FC<PropsType> = (props) =>{
 }
 
 const mapStateToProps = (state: any) => ({
-    materials:state.admin.materials
+    materials:state.admin.materials,
+    token:state.auth.token
 });
 
 export const RealMaterial = connect(mapStateToProps, { 

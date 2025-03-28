@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { setIsFetching } from './uiReducers'
+import { setError, setIsFetching } from './uiReducers'
 import { adminApi, kundenApi, SolutionsApi, materialApi, worerApi } from '../../api/api'
 
 
@@ -43,13 +43,19 @@ export const { setPlan, setKundens, setSolutions, setWorkers, setMaterials, setD
 export const adminReducer = adminSlice.reducer
 
 // ============================= ashboard ========================================================
-export const getDashboardByDataThunk = (datafrom:string, dataTo:string)=>{
+export const getDashboardByDataThunk = (token:string ,datafrom:string, dataTo:string)=>{
     return async (dispatch: Function) => {
         dispatch(setIsFetching(true))
-        const result = await adminApi.getFromDashboard(datafrom, dataTo)
-        if(result){
-           dispatch(setDashboard(result))
-        } 
+        try {
+            const result = await adminApi.getFromDashboard(token, datafrom, dataTo)
+            if(result){
+               dispatch(setDashboard(result.list))
+            } 
+        }catch(error){
+            dispatch(setError(error))
+            alert(error)
+        }   
+
         dispatch(setIsFetching(false))
         // return 1
     }
@@ -58,13 +64,19 @@ export const getDashboardByDataThunk = (datafrom:string, dataTo:string)=>{
 
 // ============================= ArbitPlans ========================================================
 
-export const getPlanByDataThunk = (data:string)=>{
+export const getPlanByDataThunk = (token:string, data:string)=>{
     return async (dispatch: Function) => {
         dispatch(setIsFetching(true))
-        const result = await adminApi.getArbitplansByData(data)
-        if(result){
-           dispatch(setPlan(result))
-        } 
+        try {
+            const result = await adminApi.getArbitplansByData(token, data)
+            console.log(result)
+            if(result){
+            dispatch(setPlan(result.list))
+            } 
+        }catch(error){
+            dispatch(setError(error))
+            alert(error)
+        }   
         dispatch(setIsFetching(false))
         // return 1
     }
@@ -162,92 +174,132 @@ export const deleteSolutionByIdThunk = (id:string) =>{
 }
 
 // ============================= Mitaribers ========================================================
-export const getWorkersThunk = () =>{
+export const getWorkersThunk = (token:string) =>{
     return async (dispatch: Function) => {
         dispatch(setIsFetching(true))
-        const result = await worerApi.getWorkers()
-        if(result){
-            dispatch(setWorkers(result))
-        }
+        try {
+            const result = await worerApi.getWorkers(token)
+            if(result){
+                dispatch(setWorkers(result.listOfWorker))
+            }
+        }catch(error){
+            dispatch(setError(error))
+            alert(error)
+        }   
         dispatch(setIsFetching(false))
         // return 1
     }
 }
-export const changeWorkerByIdThunk = (id:string, body:any) =>{
+export const changeWorkerByIdThunk = (token:string,id:string, body:any) =>{
     return async (dispatch: Function) => {
         dispatch(setIsFetching(true))
-        const result = await worerApi.changeWorkerById(id, body)
-        if(result){
-            dispatch(setWorkers(result))
-        }
+        try {
+            const result = await worerApi.changeWorkerById(token, id, body)
+            if(result){
+                dispatch(setWorkers(result.listOfWorker))
+            }
+        }catch(error){
+            dispatch(setError(error))
+            alert(error)
+        }        
         dispatch(setIsFetching(false))
         // return 1
     }
 }
-export const addWorkerThunk = ( body:any) =>{
+export const addWorkerThunk = ( token:string, body:any) =>{
     return async (dispatch: Function) => {
         dispatch(setIsFetching(true))
-        const result = await worerApi.addWorker(body)
-        if(result){
-            dispatch(setWorkers(result))
-        }
+        try{
+            const result = await worerApi.addWorker(token, body)
+            if(result){
+                dispatch(setWorkers(result.listOfWorker))
+            }
+        }catch(error){
+            dispatch(setError(error))
+            alert(error)
+        } 
         dispatch(setIsFetching(false))
         // return 1
     }
 }
-export const deleteWorkerByIdThunk = (id:string) =>{
+export const deleteWorkerByIdThunk = (token:string, id:string) =>{
     return async (dispatch: Function) => {
         dispatch(setIsFetching(true))
-        const result = await worerApi.deleteWorkerById(id)
-        if(result){
-            dispatch(setWorkers(result))
-        }
+        try{
+            const result = await worerApi.deleteWorkerById(token, id)
+            if(result){
+                dispatch(setWorkers(result.listOfWorker))
+            }
+        }catch(error){
+            dispatch(setError(error))
+            alert(error)
+        } 
         dispatch(setIsFetching(false))
         // return 1
     }
 }
 
 // ============================= Materials ========================================================
-export const getMaterialsThunk = () =>{
+export const getMaterialsThunk = (token:string) =>{
     return async (dispatch: Function) => {
         dispatch(setIsFetching(true))
-        const result = await materialApi.getMaterials()
-        if(result){
-            dispatch(setMaterials(result))
-        }
+        try {
+            const result = await materialApi.getMaterials(token)
+            if(result){
+                dispatch(setMaterials(result.list))
+            }
+        }catch(error){
+            dispatch(setError(error))
+            alert(error)
+        }   
         dispatch(setIsFetching(false))
         // return 1
     }
 }
-export const changeMaterialByIdThunk = (id:string, body:any) =>{
+export const changeMaterialByIdThunk = (token:string, id:string, body:any) =>{
     return async (dispatch: Function) => {
         dispatch(setIsFetching(true))
-        const result = await materialApi.changeMaterialById(id, body)
-        if(result){
-            dispatch(setMaterials(result))
-        }
+        try {
+            const result = await materialApi.changeMaterialById(token, id, body)
+            if(result){
+                dispatch(setMaterials(result.list))
+            }
+        }catch(error){
+            dispatch(setError(error))
+            alert(error)
+        }   
         dispatch(setIsFetching(false))
         // return 1
     }
 }
-export const addMaterialThunk = ( body:any) =>{
+export const addMaterialThunk = (token:string, body:any) =>{
     return async (dispatch: Function) => {
         dispatch(setIsFetching(true))
-        const result = await materialApi.addMaterial(body)
-        if(result){
-            dispatch(setMaterials(result))
-        }
+        try {
+            const result = await materialApi.addMaterial(token, body)
+            if(result){
+                dispatch(setMaterials(result.list))
+            }
+        }catch(error){
+            dispatch(setError(error))
+            alert(error)
+        }   
         dispatch(setIsFetching(false))
         // return 1
     }
 }
-export const deleteMaterialByIdThunk = (id:string) =>{
+export const deleteMaterialByIdThunk = (token:string, id:string) =>{
     return async (dispatch: Function) => {
         dispatch(setIsFetching(true))
-        const result = await materialApi.deleteMaterialById(id)
-        if(result){
-            dispatch(setMaterials(result))
-        }
+        try {
+            const result = await materialApi.deleteMaterialById(token, id)
+            if(result){
+                dispatch(setMaterials(result.list))
+            }
+        }catch(error){
+            dispatch(setError(error))
+            alert(error)
+        }   
         dispatch(setIsFetching(false))
         // return 1
     }

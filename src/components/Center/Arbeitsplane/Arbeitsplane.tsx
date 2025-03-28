@@ -12,17 +12,18 @@ interface PropsType {
         name: string;
         plans:Plans[]
     }],
-    getPlanByDataThunk: (data:string)=>void
+    token:string,
+    getPlanByDataThunk: (token:string, data:string)=>void
 }
 
 export const Arbeitsplane: FC<PropsType> = (props) => {
     const [activeWork, setactiveWork] = useState("");
-    const [selectedDate, setSelectedDate] = useState("heute");
+    const [selectedDate, setSelectedDate] = useState("");
     const [activeData, setActiveData] = useState<any>([]);
     useEffect(() => {
-        const fetchPlan = async () => { await props.getPlanByDataThunk(selectedDate)}
+        const fetchPlan = async () => { await props.getPlanByDataThunk(props.token, selectedDate)}
         fetchPlan();
-    }, [selectedDate, props]);
+    }, [selectedDate]);
     useEffect(() => {
         const filteredPlan = props.data.find(plan => plan.id === activeWork);
         setActiveData(filteredPlan ? filteredPlan.plans : []);
@@ -77,7 +78,8 @@ export const Arbeitsplane: FC<PropsType> = (props) => {
 }
 
 const mapStateToProps = (state: any) => ({
-    data: state.admin.plan
+    data: state.admin.plan,
+    token:state.auth.token
 });
 
 export const RealArbeitsplane = connect(mapStateToProps, { getPlanByDataThunk })(Arbeitsplane);

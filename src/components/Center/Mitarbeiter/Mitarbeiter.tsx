@@ -5,35 +5,42 @@ import { connect } from "react-redux";
 import { addWorkerThunk, changeWorkerByIdThunk, deleteWorkerByIdThunk, getWorkersThunk } from "../../../redux/reducers/adminReducer";
 
 interface PropsType{
-    getWorkersThunk: () => void,
-    changeWorkerByIdThunk: (id: string, body: any) => void,
-    deleteWorkerByIdThunk: (id: string) => void,
-    addWorkerThunk: (body: any) => void,
+    getWorkersThunk: (token:string) => void,
+    changeWorkerByIdThunk: (token:string, id: string, body: any) => void,
+    deleteWorkerByIdThunk: (token:string, id: string) => void,
+    addWorkerThunk: (token:string, body: any) => void,
     workers: {
         id: string; login: string; password: string;
-    }[]
+    }[],
+    token:string,
 }
 
 export const Mitarbeiter: FC<PropsType> = (props) =>{
     const [activId, setActivId] = useState("");
-    const [login, setLogin] = useState("Mitarbeiter 2");
-    const [pass, setPass] = useState("Old Description");
+    const [login, setLogin] = useState("");
+    const [pass, setPass] = useState("");
     useEffect(() => {
-        const aFunc = async () => { await props.getWorkersThunk() }
+        const aFunc = async () => { await props.getWorkersThunk(props.token) }
         aFunc()
     }, []);
     useEffect(() => {
         const result = props.workers.find(k => k.id === activId);
         if (result) {
-            setLogin(result.login)
-            setPass(result.password)
+            setLogin(result.login?result.login:'')
+            setPass(result.password?result.password:'')
+        }else{
+            setLogin('')
+            setPass('')
         }
     }, [activId])
-    const addWorker = async() =>{ await props.addWorkerThunk({login:'new Worker'})}
-    const deleteWorker = async() =>{ await props.deleteWorkerByIdThunk(activId) }
+    const addWorker = async() =>{ await props.addWorkerThunk(props.token, {login:'new Worker'})}
+    const deleteWorker = async() =>{ 
+        await props.deleteWorkerByIdThunk(props.token, activId) 
+        setActivId('')
+    }
     const handleSave = async() => {
         const customerData = { login: login, password: pass};
-        await props.changeWorkerByIdThunk(activId, customerData)
+        await props.changeWorkerByIdThunk(props.token, activId, customerData)
     };
     return (
         <div className={st.Mitarbeiter + ' partOfPanel'}>
@@ -82,7 +89,8 @@ export const Mitarbeiter: FC<PropsType> = (props) =>{
 }
 
 const mapStateToProps = (state: any) => ({
-    workers:state.admin.workers
+    workers:state.admin.workers,
+    token: state.auth.token
 });
 
 export const RealMitarbeiter = connect(mapStateToProps, { 

@@ -7,7 +7,7 @@ interface Solution { solutionId: string; workerId: string; interval: number; }
 interface PropsType {
     getKundensThunk: () => void,
     getSolutionsThunk: () => void,
-    getWorkersThunk: () => void,
+    getWorkersThunk: (token:string) => void,
     changeKundenByIdThunk: (id:string, body:any) =>void,
     deleteKundenByIdThunk:(id:string) =>void,
     addKundenThunk:(body:any)=>void,
@@ -16,7 +16,8 @@ interface PropsType {
     kundens: {
         id: string; name: string; phone: string; address: string; email: string;
         solutions: Solution[];
-    }[]
+    }[],
+    token:string
 
 }
 
@@ -31,7 +32,7 @@ export const Kunden: FC<PropsType> = (props) => {
     useEffect(() => {
         const aFunc = async () => {
             await props.getKundensThunk()
-            await props.getWorkersThunk()
+            await props.getWorkersThunk(props.token)
             await props.getSolutionsThunk()
         }
         aFunc()
@@ -172,6 +173,7 @@ const mapStateToProps = (state: any) => ({
     kundens: state.admin.kundens,
     solutions: state.admin.solutions,
     workers: state.admin.workers,
+    token:state.auth.token
 });
 
 export const RealKunden = connect(mapStateToProps, { 

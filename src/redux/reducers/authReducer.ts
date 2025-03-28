@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { authApi } from '../../api/api'
-import { setIsFetching, setParagraphThunk } from './uiReducers'
+import { setError, setIsFetching, setParagraphThunk } from './uiReducers'
 import { setWorkerByIdThunk } from './workerReducer'
 
 
@@ -14,6 +14,7 @@ const authSlice = createSlice({
     initialState:{
         isAuth:false,
         userId:null,
+        token:'',
         user:{
             login:'',
             role:''
@@ -28,10 +29,13 @@ const authSlice = createSlice({
         },
         setUserId(state, action:actionType){
             state.userId = action.payload
-        }
+        },
+        setToken(state, action:actionType){
+            state.token = action.payload
+        },
     }
 })
-const { setIsAuth, setUserId} = authSlice.actions
+const { setIsAuth, setUserId, setToken} = authSlice.actions
 export const { setUser }= authSlice.actions
 export const authReducer = authSlice.reducer
 
@@ -39,14 +43,21 @@ export const authReducer = authSlice.reducer
 export const logInThunk = (login:string, password:string)=>{
     return async (dispatch: Function) => {
         dispatch(setIsFetching(true))
-        const result = await authApi.logAuth(login, password)
-        if(result){
-            dispatch(setIsAuth(true))
-            dispatch(setUserId(result.id))
-            dispatch(setUser({login:result.name, role:result.role}))
-            if (result.role == 'worker')
-                dispatch(setWorkerByIdThunk(result.id))
-        } 
+        try{
+            const result = await authApi.logAuth(login, password)
+            if(result){
+                dispatch(setIsAuth(true))
+                dispatch(setUserId(result.id))
+                dispatch(setToken(result.token))
+                dispatch(setUser({login:result.login, role:result.role}))
+                if (result.role == 'worker')
+                    dispatch(setWorkerByIdThunk(result.id))
+            } 
+        }catch(error){
+            dispatch(setError(error))
+            alert('login')
+        }
+       
         dispatch(setIsFetching(false))
         return 1
     }
@@ -55,6 +66,7 @@ export const logInThunk = (login:string, password:string)=>{
 export const logOutThunk = ()=>{
     return async (dispatch: Function) => {
         dispatch(setIsAuth(false))
+        dispatch(setToken(''))
         dispatch(setUser({login:'',role:''}))
     }
 }

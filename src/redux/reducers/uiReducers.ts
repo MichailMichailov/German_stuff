@@ -10,6 +10,7 @@ const uiSlice = createSlice({
     initialState:{
         isFetching:false,
         menuParagrph:0,
+        error:'',
     },
     reducers:{
         setMenuParagrph(state, action:actionType){
@@ -17,11 +18,14 @@ const uiSlice = createSlice({
         },
         setIsFetching(state, action:actionType){
             state.isFetching = action.payload
-        }
+        },
+        setError(state, action:actionType){
+            state.error = action.payload
+        },
     }
 })
 const { setMenuParagrph} = uiSlice.actions
-export const { setIsFetching} = uiSlice.actions
+export const { setIsFetching, setError} = uiSlice.actions
 export const uiReducer = uiSlice.reducer
 
 export const setParagraphThunk = (numberParagraph:number) => {

@@ -9,10 +9,12 @@ interface PropsType {
         date: string;status: string;
         materials: string[]; notes: string; createdAt: string;
     }[]
-    getDashboardByDataThunk: (dataFrom:string, dataTo:string)=>void
+    token:string,
+    getDashboardByDataThunk: (token:string,dataFrom:string, dataTo:string)=>void
 }
 
 export const Dashboard: FC<PropsType> = (props) => {
+    console.log(props.dashboard)
     // const [currentPage, setCurrentPage] = useState(1);
     // const totalPages = Math.ceil(50);
     // const handlePageChange = (page: number) => {
@@ -21,15 +23,14 @@ export const Dashboard: FC<PropsType> = (props) => {
     //     }
     //   };
     // const displayedData = data.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-    const [currentData, setCurrentData] = useState('10.01.2025 - 12.02.2025');
+    const [currentData, setCurrentData] = useState('10.01.2025 - 22.03.2025');
     useEffect(() => {
-
         const fetchPlan = async () => {
             const [startDate, endDate] = currentData.split(' - ');
-            await props.getDashboardByDataThunk(startDate, endDate)
+            await props.getDashboardByDataThunk(props.token, startDate, endDate)
         }
         fetchPlan();
-    }, [currentData, props]);
+    }, [currentData]);
     
     return (
         <div className={st.Dashboard}>
@@ -61,7 +62,7 @@ export const Dashboard: FC<PropsType> = (props) => {
                                 <td>{e.service}</td>
                                 <td>{e.date}</td>
                                 <td>{e.status}</td>
-                                <td>{e.materials.join(', ')}</td>
+                                <td>{e.materials}</td>
                                 <td>{e.notes}</td>
                                 <td>{e.createdAt}</td>
                             </tr>
@@ -86,7 +87,8 @@ export const Dashboard: FC<PropsType> = (props) => {
 }
 
 const mapStateToProps = (state: any) => ({
-    dashboard: state.admin.dashboard
+    dashboard: state.admin.dashboard,
+    token: state.auth.token
 });
 
 export const RealDashboard = connect(mapStateToProps, { getDashboardByDataThunk })(Dashboard);

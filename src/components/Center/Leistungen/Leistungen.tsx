@@ -11,13 +11,14 @@ interface PropsType {
     changeSolutionByIdThunk: (id: string, body: any) => void,
     deleteSolutionByIdThunk: (id: string) => void,
     addSolutionThunk: (body: any) => void,
-    getMaterialsThunk: () => void,
+    getMaterialsThunk: (token:string) => void,
     solutions: {
         id: string; name: string; description: string; materials: string[]
     }[],
     materials: {
         id: string; name: string; description: string; menge: number; is_consumable: boolean;
-    }[]
+    }[],
+    token:string
 }
 
 export const Leistungen: FC<PropsType> = (props) => {
@@ -28,7 +29,7 @@ export const Leistungen: FC<PropsType> = (props) => {
     useEffect(() => {
         const aFunc = async () => { 
             await props.getSolutionsThunk() 
-            await props.getMaterialsThunk()
+            await props.getMaterialsThunk(props.token)
         }
         aFunc()
     }, []);
@@ -135,7 +136,8 @@ export const Leistungen: FC<PropsType> = (props) => {
 }
 const mapStateToProps = (state: any) => ({
     solutions:state.admin.solutions,
-    materials:state.admin.materials
+    materials:state.admin.materials,
+    token: state.auth.token
 });
 export const RealLeistungen = connect(mapStateToProps, { 
     getSolutionsThunk, changeSolutionByIdThunk, addSolutionThunk, deleteSolutionByIdThunk,getMaterialsThunk
