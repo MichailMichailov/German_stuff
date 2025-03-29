@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { workerApi } from '../../api/api'
-import { setIsFetching } from './uiReducers'
+import { setError, setIsFetching } from './uiReducers'
 
 type actionType = {
     type:string
@@ -22,20 +22,35 @@ export const { setWorkerData }= workerSlice.actions
 export const workerReducer = workerSlice.reducer
 
 
-export const setWorkerByIdThunk  = (id:string)=>{
+export const setWorkerByIdThunk  = (token:string, id:string)=>{
     return async (dispatch: Function) => {
         dispatch(setIsFetching(true))
-        const data = workerApi.getWorkerById(id)
-        dispatch(setWorkerData(data))
+        try {
+            const result = await workerApi.getWorkerById(token, id)
+            console.log(result)
+            dispatch(setWorkerData(result.list))
+        }catch(error){
+            dispatch(setError(error))
+            alert(error)
+        }   
         dispatch(setIsFetching(true))
         return 0
     }
 }
 
-export const updateWorkerThunk = (id:string, data:any)=>{
+export const updateWorkerThunk = (token:string, id:string, data:any)=>{
     return async (dispatch: Function) => {
         dispatch(setIsFetching(true))
-        await workerApi.updateWorker(id, data)
+        try {
+            const result = await workerApi.updateWorker(token, id, data)
+            if(result){
+                dispatch(setWorkerData(result.list))
+            }
+        }catch(error){
+            dispatch(setError(error))
+            alert(error)
+        }   
+
         dispatch(setIsFetching(false))
     }
 }

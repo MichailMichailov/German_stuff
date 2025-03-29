@@ -50,8 +50,6 @@ export const logInThunk = (login:string, password:string)=>{
                 dispatch(setUserId(result.id))
                 dispatch(setToken(result.token))
                 dispatch(setUser({login:result.login, role:result.role}))
-                if (result.role == 'worker')
-                    dispatch(setWorkerByIdThunk(result.id))
             } 
         }catch(error){
             dispatch(setError(error))

@@ -20,13 +20,18 @@ export const authApi = {
 }
 
 export const workerApi = {
-    getWorkerById(id: string) {
-        return instance.get('api/clientByWorkerId/' + id).then(response => response.data)
+    getWorkerById(token:string, id: string) {
+        return instance.get('api/workerbyid/'+id,
+            { headers: { "Content-Type": "application/json", 'Authorization': `Token ${token}`} }
+        ).then(response => response.data)
+        // return instance.get('api/clientByWorkerId/' + id).then(response => response.data)
         // return workerById
     },
-    updateWorker(id: string, data: any) {
-        // return instance.put('endpoint/'+id,{data}).then(response=>response.data)
-        return 0
+    updateWorker(token:string, id: string, body: any) {
+        return instance.put('api/workerbyid/'+id, body,
+            { headers: { "Content-Type": "application/json", 'Authorization': `Token ${token}`} }
+        ).then(response=>response.data)
+        // return 0
     }
 }
 
@@ -48,40 +53,56 @@ export const adminApi = {
 }
 
 export const kundenApi = {
-    getAllKunden() {
-        // return instance.get('endpoint').then(response=>response.data)
-        return kunden
+    getAllKunden(token:string) {
+        return instance.get('api/kundens/',
+            { headers: { "Content-Type": "application/json", 'Authorization': `Token ${token}`} }
+        ).then(response => response.data)
+        // return kunden
     },
-    changeKundenById(id: string, body: any) {
-        // return instance.put('endpoint/'+id, {body}).then(response=>response.data)
-        return kunden
+    changeKundenById(token:string, id: string, body: any) {
+        return instance.put('api/kundens/'+id, body,
+            { headers: { "Content-Type": "application/json", 'Authorization': `Token ${token}`} }
+        ).then(response=>response.data)
+        // return kunden
     },
-    addKunden(body: any) {
-        // return instance.post('endpoint/', {body}).then(response=>response.data)
-        return [...kunden, body]
+    addKunden(token:string, body: any) {
+        return instance.post('api/kundens/', body, 
+            { headers: { "Content-Type": "application/json", 'Authorization': `Token ${token}`} }
+        ).then(response => response.data)
+        // return [...kunden, body]
     },
-    deleteKundenByid(id: string) {
-        // return instance.delete('endpoint/'+id).then(response=>response.data)
-        return kunden.filter(s => s.id !== id)
+    deleteKundenByid(token:string, id: string) {
+        return instance.delete('api/kundens/'+id,
+            { headers: { "Content-Type": "application/json", 'Authorization': `Token ${token}`} }
+        ).then(response=>response.data)
+        // return kunden.filter(s => s.id !== id)
     }
 }
 
 export const SolutionsApi = {
-    getSolutions() {
-        // return instance.get('endpoint').then(response=>response.data)
-        return solutionsFull
+    getSolutions(token:string) {
+        return instance.get('api/leistungen/',
+            { headers: { "Content-Type": "application/json", 'Authorization': `Token ${token}`} }
+        ).then(response => response.data)
+        // return solutionsFull
     },
-    addSolution(body: any) {
-        // return instance.post('endpoint/', {body}).then(response=>response.data)
-        return [...solutionsFull, body]
+    addSolution(token:string, body: any) {
+        return instance.post('api/leistungen/', body, 
+            { headers: { "Content-Type": "application/json", 'Authorization': `Token ${token}`} }
+        ).then(response => response.data)
+        // return [...solutionsFull, body]
     },
-    changeSolutionById(id: string, body: any) {
-        // return instance.put('endpoint/'+id, {body}).then(response=>response.data)
-        return solutionsFull
+    changeSolutionById(token:string, id: string, body: any) {
+        return instance.put('api/leistungen/'+id, body,
+            { headers: { "Content-Type": "application/json", 'Authorization': `Token ${token}`} }
+        ).then(response=>response.data)
+        // return solutionsFull
     },
-    deleteSolutionById(id: string) {
-        // return instance.delete('endpoint/'+id).then(response=>response.data)
-        return solutionsFull.filter(s => s.id !== id)
+    deleteSolutionById(token:string, id: string) {
+        return instance.delete('api/leistungen/'+id,
+            { headers: { "Content-Type": "application/json", 'Authorization': `Token ${token}`} }
+        ).then(response=>response.data)
+        // return solutionsFull.filter(s => s.id !== id)
     }
 }
 export const materialApi = {

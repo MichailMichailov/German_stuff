@@ -3,15 +3,15 @@ import st from './Kunden.module.scss'
 import trash from '../../../assets/img/trsh.png'
 import { connect } from "react-redux";
 import { addKundenThunk, changeKundenByIdThunk, deleteKundenByIdThunk, getKundensThunk, getSolutionsThunk, getWorkersThunk } from '../../../redux/reducers/adminReducer';
-interface Solution { solutionId: string; workerId: string; interval: number; }
+interface Solution { solutionId: string; workerId: string; date:string, id:number }
 interface PropsType {
-    getKundensThunk: () => void,
-    getSolutionsThunk: () => void,
+    getKundensThunk: (token:string) => void,
+    getSolutionsThunk: (token:string) => void,
     getWorkersThunk: (token:string) => void,
-    changeKundenByIdThunk: (id:string, body:any) =>void,
-    deleteKundenByIdThunk:(id:string) =>void,
-    addKundenThunk:(body:any)=>void,
-    solutions: { id: string; name: string; description: string; materials: string[] }[],
+    changeKundenByIdThunk: (token:string, id:string, body:any) =>void,
+    deleteKundenByIdThunk:(token:string, id:string) =>void,
+    addKundenThunk:(token:string, body:any)=>void,
+    solutions: { id: string; name: string; description: string; materials: string[], quantity:string }[],
     workers: { id: string; login: string; password: string; }[]
     kundens: {
         id: string; name: string; phone: string; address: string; email: string;
@@ -22,7 +22,6 @@ interface PropsType {
 }
 
 export const Kunden: FC<PropsType> = (props) => {
-    console.log(props)
     const [activId, setActivId] = useState("");
     const [name, setName] = useState("");
     const [address, setAddress] = useState("");
@@ -31,9 +30,9 @@ export const Kunden: FC<PropsType> = (props) => {
     const [solutions, setSolutions] = useState<Solution[]>([]);
     useEffect(() => {
         const aFunc = async () => {
-            await props.getKundensThunk()
+            await props.getKundensThunk(props.token)
             await props.getWorkersThunk(props.token)
-            await props.getSolutionsThunk()
+            await props.getSolutionsThunk(props.token)
         }
         aFunc()
     }, []);
@@ -48,14 +47,19 @@ export const Kunden: FC<PropsType> = (props) => {
         }
     }, [activId])
 
-    const addKunden = async() =>{ await props.addKundenThunk({name:"new Kunden"}) }
-    const deleteKunden = async() =>{ await props.deleteKundenByIdThunk(activId) }
+    const addKunden = async() =>{ await props.addKundenThunk(props.token, {name:"new Kunden"}) }
+    const deleteKunden = async() =>{ await props.deleteKundenByIdThunk(props.token, activId) }
     const handleSave = async() => {
-        const customerData = { name, address, phone: telephone,email,solutions };
-        await props.changeKundenByIdThunk(activId, customerData)
+        const customerData = { name, address, phone: telephone,email,solutions:solutions.map(e=>({ solutionId:parseInt(e.solutionId),workerId: parseInt(e.workerId), date:e.date, id:e.id }))
+    };
+        await props.changeKundenByIdThunk(props.token, activId, customerData)
     }
     
-    const addSolution = () =>{ setSolutions(prev => [ ...prev,  { solutionId: '', workerId: '', interval: 0 } ])}
+    const addSolution = () =>{ 
+        const today = new Date().toISOString().split('T')[0];
+        setSolutions(prev => [ 
+            ...prev,  { id:-1,solutionId: '', workerId: '', interval: 0, date:today, quantity:0} ])
+        }
     const deleteSolution = (id:number) =>{ setSolutions(prev => prev.filter((_, i) => i !== id))}
     const changeSolution = (index: number, newSolutionId: string) => { 
         setSolutions(prev => prev.map((solution, i) =>  i === index ? { ...solution, solutionId: newSolutionId } : solution )) 
@@ -63,8 +67,8 @@ export const Kunden: FC<PropsType> = (props) => {
     const changeWorker = (index: number, newWorkerId: string) => {
         setSolutions(prev => prev.map((solution, i) =>  i === index ? { ...solution, workerId: newWorkerId } : solution ))
     }
-    const changeInterval = (index: number, newInterval: number) => {
-        setSolutions(prev => prev.map((solution, i) => i === index ? { ...solution, interval: newInterval } : solution ))
+    const changeDate = (index: number, newDate: string) => {
+        setSolutions(prev => prev.map((solution, i) => i === index ? { ...solution, date: newDate } : solution ))
     }
     return (
         <div className={st.Kunden}>
@@ -130,11 +134,14 @@ export const Kunden: FC<PropsType> = (props) => {
                                 <thead>
                                     <tr>
                                         <th>Tatigkeit</th><th>Mitarbeiter</th>
+                                        <th>Date</th>
                                         <th>Intervall in Tage</th> <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {solutions.map((s: Solution, id: number) => {
+                                        let interv = props.solutions.filter(e => s.solutionId == e.id)
+                                        let intv = interv.length > 0? interv[0].quantity:0 
                                         return (<tr>
                                             <td>
                                                 <select onChange={(e) => changeSolution(id, e.target.value)}>
@@ -146,7 +153,8 @@ export const Kunden: FC<PropsType> = (props) => {
                                                     {props.workers.map(e => (<option value={e.id} selected={s.workerId == e.id}>{e.login}</option>))}
                                                 </select> 
                                             </td>
-                                            <td><input type="number" value={s.interval} onChange={(e) => changeInterval(id, parseInt(e.target.value))} /></td>
+                                            <td><input type="date" name="" id="" value={s.date} onChange={e=>changeDate(id, e.target.value)}/></td>
+                                            <td>{intv}</td>
                                             <td><div className={st.img} onClick={() => { deleteSolution(id) }}><img src={trash} alt="" /></div></td>
                                         </tr>
                                         )

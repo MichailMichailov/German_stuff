@@ -42,7 +42,7 @@ const adminSlice = createSlice({
 export const { setPlan, setKundens, setSolutions, setWorkers, setMaterials, setDashboard }= adminSlice.actions
 export const adminReducer = adminSlice.reducer
 
-// ============================= ashboard ========================================================
+// ============================= dashboard ========================================================
 export const getDashboardByDataThunk = (token:string ,datafrom:string, dataTo:string)=>{
     return async (dispatch: Function) => {
         dispatch(setIsFetching(true))
@@ -83,91 +83,131 @@ export const getPlanByDataThunk = (token:string, data:string)=>{
 }
 
 // ============================= Kunden ========================================================
-export const getKundensThunk = ()=>{
+export const getKundensThunk = (token:string)=>{
     return async (dispatch: Function) => {
         dispatch(setIsFetching(true))
-        const result = await kundenApi.getAllKunden()
-        if(result){
-            dispatch(setKundens(result))
-        }
+        try {
+            const result = await kundenApi.getAllKunden(token)
+            if(result){
+                dispatch(setKundens(result.list))
+            }
+        }catch(error){
+            dispatch(setError(error))
+            alert(error)
+        }   
         dispatch(setIsFetching(false))
         // return 1
     }
 }
-export const changeKundenByIdThunk = (id:string, body:any) =>{
+export const changeKundenByIdThunk = (token:string, id:string, body:any) =>{
     return async (dispatch: Function) => {
         dispatch(setIsFetching(true))
-        const result = await kundenApi.changeKundenById(id, body)
-        if(result){
-            dispatch(setKundens(result))
-        }
+        try {
+            const result = await kundenApi.changeKundenById(token, id, body)
+            if(result){
+                dispatch(setKundens(result.list))
+            }
+        }catch(error){
+            dispatch(setError(error))
+            alert(error)
+        }   
         dispatch(setIsFetching(false))
         // return 1
     }
 }
-export const addKundenThunk = ( body:any) =>{
+export const addKundenThunk = (token:string, body:any) =>{
     return async (dispatch: Function) => {
         dispatch(setIsFetching(true))
-        const result = await kundenApi.addKunden(body)
-        if(result){
-            dispatch(setKundens(result))
-        }
+        try {
+            const result = await kundenApi.addKunden(token, body)
+            if(result){
+                dispatch(setKundens(result.list))
+            }
+        }catch(error){
+            dispatch(setError(error))
+            alert(error)
+        }   
         dispatch(setIsFetching(false))
         // return 1
     }
 }
-export const deleteKundenByIdThunk = (id:string) =>{
+export const deleteKundenByIdThunk = (token:string, id:string) =>{
     return async (dispatch: Function) => {
         dispatch(setIsFetching(true))
-        const result = await kundenApi.deleteKundenByid(id)
-        if(result){
-            dispatch(setKundens(result))
-        }
+        try {
+            const result = await kundenApi.deleteKundenByid(token, id)
+            if(result){
+                dispatch(setKundens(result.list))
+            }
+        }catch(error){
+            dispatch(setError(error))
+            alert(error)
+        }   
         dispatch(setIsFetching(false))
         // return 1
     }
 }
 // ============================= Solutions ========================================================
-export const getSolutionsThunk = () =>{
+export const getSolutionsThunk = (token:string) =>{
     return async (dispatch: Function) => {
         dispatch(setIsFetching(true))
-        const result = await SolutionsApi.getSolutions()
-        if(result){
-            dispatch(setSolutions(result))
-        }
+        try {
+            const result = await SolutionsApi.getSolutions(token)
+            if(result){
+                dispatch(setSolutions(result.list))
+            }
+        }catch(error){
+            dispatch(setError(error))
+            alert(error)
+        }   
         dispatch(setIsFetching(false))
         // return 1
     }
 }
-export const changeSolutionByIdThunk = (id:string, body:any) =>{
+export const changeSolutionByIdThunk = (token:string, id:string, body:any) =>{
     return async (dispatch: Function) => {
         dispatch(setIsFetching(true))
-        const result = await SolutionsApi.changeSolutionById(id, body)
-        if(result){
-            dispatch(setSolutions(result))
-        }
+        try {
+            const result = await SolutionsApi.changeSolutionById(token, id, body)
+            if(result){
+                dispatch(setSolutions(result.list))
+            }
+        }catch(error){
+            dispatch(setError(error))
+            alert(error)
+        }   
         dispatch(setIsFetching(false))
         // return 1
     }
 }
-export const addSolutionThunk = ( body:any) =>{
+export const addSolutionThunk = ( token:string, body:any) =>{
     return async (dispatch: Function) => {
         dispatch(setIsFetching(true))
-        const result = await SolutionsApi.addSolution(body)
+        try {
+            const result = await SolutionsApi.addSolution(token, body)
         if(result){
-            dispatch(setSolutions(result))
+            dispatch(setSolutions(result.list))
         }
+        }catch(error){
+            dispatch(setError(error))
+            alert(error)
+        }   
         dispatch(setIsFetching(false))
         // return 1
     }
 }
-export const deleteSolutionByIdThunk = (id:string) =>{
+export const deleteSolutionByIdThunk = (token:string, id:string) =>{
     return async (dispatch: Function) => {
         dispatch(setIsFetching(true))
-        const result = await SolutionsApi.deleteSolutionById(id)
-        if(result){
-            dispatch(setSolutions(result))
-        }
+        try {
+            const result = await SolutionsApi.deleteSolutionById(token, id)
+            if(result){
+                dispatch(setSolutions(result.list))
+            }
+        }catch(error){
+            dispatch(setError(error))
+            alert(error)
+        }   
         dispatch(setIsFetching(false))
         // return 1
     }
@@ -180,7 +220,7 @@ export const getWorkersThunk = (token:string) =>{
         try {
             const result = await worerApi.getWorkers(token)
             if(result){
-                dispatch(setWorkers(result.listOfWorker))
+                dispatch(setWorkers(result.list))
             }
         }catch(error){
             dispatch(setError(error))
@@ -196,7 +236,7 @@ export const changeWorkerByIdThunk = (token:string,id:string, body:any) =>{
         try {
             const result = await worerApi.changeWorkerById(token, id, body)
             if(result){
-                dispatch(setWorkers(result.listOfWorker))
+                dispatch(setWorkers(result.list))
             }
         }catch(error){
             dispatch(setError(error))
@@ -212,7 +252,7 @@ export const addWorkerThunk = ( token:string, body:any) =>{
         try{
             const result = await worerApi.addWorker(token, body)
             if(result){
-                dispatch(setWorkers(result.listOfWorker))
+                dispatch(setWorkers(result.list))
             }
         }catch(error){
             dispatch(setError(error))
@@ -228,7 +268,7 @@ export const deleteWorkerByIdThunk = (token:string, id:string) =>{
         try{
             const result = await worerApi.deleteWorkerById(token, id)
             if(result){
-                dispatch(setWorkers(result.listOfWorker))
+                dispatch(setWorkers(result.list))
             }
         }catch(error){
             dispatch(setError(error))

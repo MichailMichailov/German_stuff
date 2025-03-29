@@ -84,7 +84,7 @@ export const Material: FC<PropsType> = (props) =>{
                         <fieldset>
                             <div className=""><label htmlFor="pass">Avaliable Count</label></div>
                             <div className="">
-                                <input type="text" id="pass" value={menge}
+                                <input type="number" id="pass" value={menge}
                                     onChange={(e) => setMenge(parseInt(e.target.value))} required />
                             </div>
                         </fieldset>

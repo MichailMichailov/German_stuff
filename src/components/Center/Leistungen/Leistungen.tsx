@@ -7,28 +7,31 @@ import { addSolutionThunk, changeSolutionByIdThunk, deleteSolutionByIdThunk, get
 
 
 interface PropsType {
-    getSolutionsThunk: () => void,
-    changeSolutionByIdThunk: (id: string, body: any) => void,
-    deleteSolutionByIdThunk: (id: string) => void,
-    addSolutionThunk: (body: any) => void,
-    getMaterialsThunk: (token:string) => void,
+    getSolutionsThunk: (token: string) => void,
+    changeSolutionByIdThunk: (token: string, id: string, body: any) => void,
+    deleteSolutionByIdThunk: (token: string, id: string) => void,
+    addSolutionThunk: (token: string, body: any) => void,
+    getMaterialsThunk: (token: string) => void,
     solutions: {
-        id: string; name: string; description: string; materials: string[]
+        id: string; name: string; description: string; materials: string[], quantity: number;
     }[],
     materials: {
         id: string; name: string; description: string; menge: number; is_consumable: boolean;
     }[],
-    token:string
+    token: string
 }
 
 export const Leistungen: FC<PropsType> = (props) => {
+    console.log(props.materials)
+    console.log(props.solutions)
     const [activId, setActivId] = useState("");
-    const [name, setName] = useState("Leistungen 2");
-    const [desc, setDesc] = useState("Old Description");
+    const [name, setName] = useState("");
+    const [desc, setDesc] = useState("");
+    const [quantity, setQuantity] = useState(0);
     const [materials, setMaterials] = useState<string[]>([]);
     useEffect(() => {
-        const aFunc = async () => { 
-            await props.getSolutionsThunk() 
+        const aFunc = async () => {
+            await props.getSolutionsThunk(props.token)
             await props.getMaterialsThunk(props.token)
         }
         aFunc()
@@ -36,22 +39,26 @@ export const Leistungen: FC<PropsType> = (props) => {
     useEffect(() => {
         const result = props.solutions.find(k => k.id === activId);
         if (result) {
-            setName(result.name)
-            setDesc(result.description)
-            setMaterials(result.materials)
+            setName(result.name ? result.name : '')
+            setDesc(result.description ? result.description : '')
+            setMaterials(result.materials ? result.materials : [])
+            setQuantity(result.quantity? result.quantity:0)
         }
     }, [activId])
-    const addSoluton = async() =>{ await props.addSolutionThunk({name:'new Solution'})}
-    const deleteSolution = async() =>{ await props.deleteSolutionByIdThunk(activId) }
-    const handleSave = async() => {
-        const customerData = { name: name, description: desc, materials:materials};
-        await props.changeSolutionByIdThunk(activId, customerData)
+    const addSoluton = async () => { await props.addSolutionThunk(props.token, { name: 'new Solution' }) }
+    const deleteSolution = async () => {
+        await props.deleteSolutionByIdThunk(props.token, activId)
+        setActivId('')
+    }
+    const handleSave = async () => {
+        const customerData = { name: name, description: desc, materials: materials.map(v=>parseInt(v)), quantity:quantity };
+        await props.changeSolutionByIdThunk(props.token, activId, customerData)
     };
     const changeMaterial = (id: number, newId: string) => {
-        setMaterials(prev =>  prev.map((m, i) => (i === id ? newId : m)));
+        setMaterials(prev => prev.map((m, i) => (i === id ? newId : m)));
     };
-    const addMaterial = () =>{ setMaterials(prev => [ ...prev, "0" ])}
-    const deleteMaterial = (id:number) =>{ setMaterials(prev => prev.filter((_, i) => i !== id))}
+    const addMaterial = () => { setMaterials(prev => [...prev, "0"]) }
+    const deleteMaterial = (id: number) => { setMaterials(prev => prev.filter((_, i) => i !== id)) }
     return (
         <div className={st.Leistungen + ' partOfPanel'}>
             <div className='partOfPanel__content container'>
@@ -59,9 +66,9 @@ export const Leistungen: FC<PropsType> = (props) => {
                     <div className={st.list + ' list'}>
                         <div className='list__title'>Leistungen</div>
                         <ul>
-                            {props.solutions.map(e=>(
-                                <li className={e.id == activId?'list__choose':''} 
-                                onClick={event => { setActivId(e.id) }}>{e.name}</li>
+                            {props.solutions.map(e => (
+                                <li className={e.id == activId ? 'list__choose' : ''}
+                                    onClick={event => { setActivId(e.id) }}>{e.name}</li>
                             ))}
                         </ul>
                         <div className='list__btnAdd' onClick={addSoluton}>+</div>
@@ -71,23 +78,30 @@ export const Leistungen: FC<PropsType> = (props) => {
                     <form className="adminForm">
                         <h2>Info about Leistungen</h2>
                         <fieldset className="">
-                        <div className=""><label htmlFor="name">Name</label></div>
-                                <div className="">
-                                    <input type="text" id="name" value={name}
-                                        onChange={(e) => setName(e.target.value)} required />
-                                </div>
+                            <div className=""><label htmlFor="name">Name</label></div>
+                            <div className="">
+                                <input type="text" id="name" value={name}
+                                    onChange={(e) => setName(e.target.value)} required />
+                            </div>
                         </fieldset>
                         <fieldset className="">
-                       
-                                <div className=""><label htmlFor="desc">Description</label></div>
-                                <div className="">
-                                    <textarea id="desc" value={desc}
-                                        onChange={(e) => setDesc(e.target.value)} required />
-                                </div>
+                            <div className=""><label htmlFor="name">Quantity</label></div>
+                            <div className="">
+                                <input type="number" id="name" value={quantity}
+                                    onChange={(e) => setQuantity(parseInt(e.target.value))} required />
+                            </div>
+                        </fieldset>
+                        <fieldset className="">
+
+                            <div className=""><label htmlFor="desc">Description</label></div>
+                            <div className="">
+                                <textarea id="desc" value={desc}
+                                    onChange={(e) => setDesc(e.target.value)} required />
+                            </div>
                         </fieldset>
                         <div className='btns btnsR'>
                             <button className='btn' type="button" onClick={handleSave}>Change</button>
-                            <button className='btn btnRed btnImg' type="button" onClick={deleteSolution}><div className={st.img}><img src={trash} alt=""/></div></button>
+                            <button className='btn btnRed btnImg' type="button" onClick={deleteSolution}><div className={st.img}><img src={trash} alt="" /></div></button>
                         </div>
                     </form>
 
@@ -104,18 +118,18 @@ export const Leistungen: FC<PropsType> = (props) => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {materials.map((m:string, id:number) => {
+                                    {materials.map((m: string, id: number) => {
                                         let maT = props.materials.filter(s => s.id == m)[0]
-                                        const mat = maT?maT:{id:'None', is_consumable:false}
-                                        return(<tr >
+                                        const mat = maT ? maT : { id: 'None', is_consumable: false, menge: 0 }
+                                        return (<tr >
                                             <td>
                                                 <select name="" id="" onChange={(e) => changeMaterial(id, e.target.value)}>{
-                                                props.materials.map(m=>(<option key={m.id} value={m.id}>{m.name}</option>))
+                                                    props.materials.map(mat => (<option key={mat.id} value={mat.id} selected={m == mat.id}>{mat.name}</option>))
                                                 }</select>
                                             </td>
-                                            <td><input type="number" name="" id="" value={5}/></td> <td>{mat.is_consumable?"Ja":"nein"}</td>
+                                            <td>{mat.menge}</td> <td>{mat.is_consumable ? "Ja" : "nein"}</td>
                                             <td>
-                                                <div className={st.img} onClick={()=>{deleteMaterial(id)}}> <img src={trash} alt="Löschen" /> </div>
+                                                <div className={st.img} onClick={() => { deleteMaterial(id) }}> <img src={trash} alt="Löschen" /> </div>
                                             </td>
                                         </tr>)
                                     })}
@@ -135,10 +149,10 @@ export const Leistungen: FC<PropsType> = (props) => {
     )
 }
 const mapStateToProps = (state: any) => ({
-    solutions:state.admin.solutions,
-    materials:state.admin.materials,
+    solutions: state.admin.solutions,
+    materials: state.admin.materials,
     token: state.auth.token
 });
-export const RealLeistungen = connect(mapStateToProps, { 
-    getSolutionsThunk, changeSolutionByIdThunk, addSolutionThunk, deleteSolutionByIdThunk,getMaterialsThunk
- })(Leistungen);
+export const RealLeistungen = connect(mapStateToProps, {
+    getSolutionsThunk, changeSolutionByIdThunk, addSolutionThunk, deleteSolutionByIdThunk, getMaterialsThunk
+})(Leistungen);

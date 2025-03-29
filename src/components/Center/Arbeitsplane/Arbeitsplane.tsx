@@ -17,6 +17,7 @@ interface PropsType {
 }
 
 export const Arbeitsplane: FC<PropsType> = (props) => {
+    console.log(props.data)
     const [activeWork, setactiveWork] = useState("");
     const [selectedDate, setSelectedDate] = useState("");
     const [activeData, setActiveData] = useState<any>([]);

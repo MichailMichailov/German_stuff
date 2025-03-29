@@ -4,7 +4,7 @@ import st from "./WorkerCenter.module.scss";
 import logo from "../../assets/img/Uhlig-Logo-Rechteck1.png";
 import { logOutThunk } from "../../redux/reducers/authReducer";
 import { getCurrentData } from "../common/functions";
-import { updateWorkerThunk } from "../../redux/reducers/workerReducer";
+import { setWorkerByIdThunk, updateWorkerThunk } from "../../redux/reducers/workerReducer";
 import { Preload } from "../common/preload/preload";
 
 interface PropsTypeList {
@@ -43,23 +43,29 @@ const ListForWorker: FC<PropsTypeList> = ({ selectedId, listOfSome, title, onUpd
 
 interface PropsTypeAdmin {
     logOutThunk: () => void;
-    updateWorkerThunk:(id:string, data:any)=>void;
+    setWorkerByIdThunk:(token:string, id:string) => void;
+    updateWorkerThunk:(token:string, id:string, data:any)=>void;
     data: {
         id: number; Name: string; Note: string;
         listOfInstrument: { Name: string; Status: boolean }[];
         ListOfWork: { Name: string; Status: boolean }[];
     }[];
     login:string,
-    id: string
+    id: string,
+    token:string
 }
 
 export const WorkerCenter: FC<PropsTypeAdmin> = (props) => {
+    console.log(props)
     const [selectedId, setSelectedId] = useState<number>(0);
-    const [name, setName] = useState<string>(props.login);
-    const [note, setNote] = useState<string>(props.data[selectedId].Note);
-    const [listOfWork, setListOfWork] = useState(props.data[selectedId].ListOfWork);
-    const [listOfInstrument, setListOfInstrument] = useState(props.data[selectedId].listOfInstrument);
+    const [note, setNote] = useState<string>('');
+    const [listOfWork, setListOfWork] = useState<any>([]);
+    const [listOfInstrument, setListOfInstrument] = useState<any>([]);
     const formattedDate = getCurrentData();
+    useEffect(() => {
+        const aFunc = async () => { await props.setWorkerByIdThunk(props.token, props.id)}
+        aFunc()
+    }, []);
     const changeClient = (id: number) => {
         setSelectedId(id);
         setNote(props.data[id].Note);
@@ -74,7 +80,7 @@ export const WorkerCenter: FC<PropsTypeAdmin> = (props) => {
             name: props.data[selectedId].Name,
             note, listOfWork, listOfInstrument,
         };
-        props.updateWorkerThunk(props.id, finalData)
+        props.updateWorkerThunk(props.token, props.id, finalData)
     };
 
     return (
@@ -85,7 +91,7 @@ export const WorkerCenter: FC<PropsTypeAdmin> = (props) => {
             </header>
             <main className={st.wMain}>
                 <div className="container">
-                    <h3 className={st.wMain__title}>Hallo {name}</h3>
+                    <h3 className={st.wMain__title}>Hallo {props.login}</h3>
                     <div className={st.chose}>
                         <div className={st.chose__container}>
                             <div className={st.chose__container_text}>Kunde wählen:</div>
@@ -126,7 +132,8 @@ export const WorkerCenter: FC<PropsTypeAdmin> = (props) => {
 const mapStateToProps = (state: any) => ({
     login: state.auth.user.login,
     data: state.worker.data,
-    id: state.auth.user.isAuth,
+    id: state.auth.userId,
+    token: state.auth.token
 });
 
-export const RealWorkerCenter = connect(mapStateToProps, { logOutThunk, updateWorkerThunk })(WorkerCenter);
+export const RealWorkerCenter = connect(mapStateToProps, { logOutThunk, updateWorkerThunk, setWorkerByIdThunk })(WorkerCenter);
