@@ -27,13 +27,12 @@ export const setWorkerByIdThunk  = (token:string, id:string)=>{
         dispatch(setIsFetching(true))
         try {
             const result = await workerApi.getWorkerById(token, id)
-            console.log(result)
             dispatch(setWorkerData(result.list))
         }catch(error){
             dispatch(setError(error))
             alert(error)
         }   
-        dispatch(setIsFetching(true))
+        dispatch(setIsFetching(false))
         return 0
     }
 }

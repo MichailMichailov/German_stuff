@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import st from './Leistungen.module.scss'
 import trash from '../../../assets/img/trsh.png'
 import { connect } from "react-redux";
@@ -29,6 +29,9 @@ export const Leistungen: FC<PropsType> = (props) => {
     const [desc, setDesc] = useState("");
     const [quantity, setQuantity] = useState(0);
     const [materials, setMaterials] = useState<string[]>([]);
+    const [statusSave, setStatusSave] = useState(false)
+    const isAutoUpdate = useRef(true);
+    useEffect(()=>{!isAutoUpdate.current&&setStatusSave(true)},[name, desc,quantity,materials ])
     useEffect(() => {
         const aFunc = async () => {
             await props.getSolutionsThunk(props.token)
@@ -37,6 +40,7 @@ export const Leistungen: FC<PropsType> = (props) => {
         aFunc()
     }, []);
     useEffect(() => {
+        isAutoUpdate.current = true;
         const result = props.solutions.find(k => k.id === activId);
         if (result) {
             setName(result.name ? result.name : '')
@@ -44,6 +48,8 @@ export const Leistungen: FC<PropsType> = (props) => {
             setMaterials(result.materials ? result.materials : [])
             setQuantity(result.quantity? result.quantity:0)
         }
+        setStatusSave(false);
+        setTimeout(() => { isAutoUpdate.current = false; }, 0);
     }, [activId])
     const addSoluton = async () => { await props.addSolutionThunk(props.token, { name: 'new Solution' }) }
     const deleteSolution = async () => {
@@ -51,6 +57,7 @@ export const Leistungen: FC<PropsType> = (props) => {
         setActivId('')
     }
     const handleSave = async () => {
+        setStatusSave(false);
         const customerData = { name: name, description: desc, materials: materials.map(v=>parseInt(v)), quantity:quantity };
         await props.changeSolutionByIdThunk(props.token, activId, customerData)
     };
@@ -139,7 +146,7 @@ export const Leistungen: FC<PropsType> = (props) => {
 
                         <div className={st.table__btnAdd}>
                             <div className={st.table__btnAdd_btn} onClick={addMaterial}>+</div>
-                            <div className="panel">Daten gespeichert</div>
+                            <div className={'panel ' + (statusSave?'panelChange':'')}>Daten {statusSave?'nicht ':''}gespeichert</div>
                             <div className={st.table__btnAdd_btn} onClick={handleSave}>✔</div>
                         </div>
                     </div>

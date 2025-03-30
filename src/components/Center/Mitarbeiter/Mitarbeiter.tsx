@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import st from './Mitarbeiter.module.scss'
 import { connect } from "react-redux";
 import { addWorkerThunk, changeWorkerByIdThunk, deleteWorkerByIdThunk, getWorkersThunk } from "../../../redux/reducers/adminReducer";
@@ -19,11 +19,15 @@ export const Mitarbeiter: FC<PropsType> = (props) =>{
     const [activId, setActivId] = useState("");
     const [login, setLogin] = useState("");
     const [pass, setPass] = useState("");
+    const [statusSave, setStatusSave] = useState(false)
+    const isAutoUpdate = useRef(true);
+    useEffect(()=>{!isAutoUpdate.current&&setStatusSave(true)},[login, pass])
     useEffect(() => {
         const aFunc = async () => { await props.getWorkersThunk(props.token) }
         aFunc()
     }, []);
     useEffect(() => {
+        isAutoUpdate.current = true;
         const result = props.workers.find(k => k.id === activId);
         if (result) {
             setLogin(result.login?result.login:'')
@@ -32,6 +36,8 @@ export const Mitarbeiter: FC<PropsType> = (props) =>{
             setLogin('')
             setPass('')
         }
+        setStatusSave(false);
+        setTimeout(() => { isAutoUpdate.current = false; }, 0);
     }, [activId])
     const addWorker = async() =>{ await props.addWorkerThunk(props.token, {login:'new Worker'})}
     const deleteWorker = async() =>{ 
@@ -39,6 +45,7 @@ export const Mitarbeiter: FC<PropsType> = (props) =>{
         setActivId('')
     }
     const handleSave = async() => {
+        setStatusSave(false);
         const customerData = { login: login, password: pass};
         await props.changeWorkerByIdThunk(props.token, activId, customerData)
     };
@@ -79,7 +86,7 @@ export const Mitarbeiter: FC<PropsType> = (props) =>{
                             <button className='btn' type="button" onClick={handleSave}>Change</button>
                             <button className='btn btnRed' type="button" onClick={deleteWorker}>Delete</button>
                         </div>
-                        <div className='panel adminForm__panel'>Daten gespeichert</div>
+                        <div className={'panel adminForm__panel ' + (statusSave?'panelChange':'')}>Daten {statusSave?'nicht ':''}gespeichert</div>
                         
                     </form>
                 </div>

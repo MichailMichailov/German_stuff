@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import st from './Kunden.module.scss'
 import trash from '../../../assets/img/trsh.png'
 import { connect } from "react-redux";
@@ -28,6 +28,9 @@ export const Kunden: FC<PropsType> = (props) => {
     const [telephone, setTelephone] = useState("");
     const [email, setEmail] = useState("");
     const [solutions, setSolutions] = useState<Solution[]>([]);
+    const [statusSave, setStatusSave] = useState(false)
+    const isAutoUpdate = useRef(true);
+    useEffect(()=>{!isAutoUpdate.current&&setStatusSave(true)},[name, address,telephone,email, solutions ])
     useEffect(() => {
         const aFunc = async () => {
             await props.getKundensThunk(props.token)
@@ -37,6 +40,7 @@ export const Kunden: FC<PropsType> = (props) => {
         aFunc()
     }, []);
     useEffect(() => {
+        isAutoUpdate.current = true;
         const result = props.kundens.find(k => k.id === activId);
         if (result) {
             setName(result.name)
@@ -45,13 +49,15 @@ export const Kunden: FC<PropsType> = (props) => {
             setEmail(result.email)
             setSolutions(result.solutions)
         }
+        setStatusSave(false);
+        setTimeout(() => { isAutoUpdate.current = false; }, 0);
     }, [activId])
 
     const addKunden = async() =>{ await props.addKundenThunk(props.token, {name:"new Kunden"}) }
     const deleteKunden = async() =>{ await props.deleteKundenByIdThunk(props.token, activId) }
     const handleSave = async() => {
-        const customerData = { name, address, phone: telephone,email,solutions:solutions.map(e=>({ solutionId:parseInt(e.solutionId),workerId: parseInt(e.workerId), date:e.date, id:e.id }))
-    };
+        setStatusSave(false);
+        const customerData = { name, address, phone: telephone,email,solutions:solutions.map(e=>({ solutionId:parseInt(e.solutionId),workerId: parseInt(e.workerId), date:e.date, id:e.id }))};
         await props.changeKundenByIdThunk(props.token, activId, customerData)
     }
     
@@ -165,7 +171,7 @@ export const Kunden: FC<PropsType> = (props) => {
 
                         <div className={st.table__btnAdd}>
                             <div className={st.table__btnAdd_btn} onClick={addSolution} >+</div>
-                            <div className='panel'>Daten gespeichert</div>
+                            <div className={'panel ' + (statusSave?'panelChange':'')}>Daten {statusSave?'nicht ':''}gespeichert</div>
                             <div className={st.table__btnAdd_btn} onClick={handleSave}>✔</div>
                         </div>
                     </div>

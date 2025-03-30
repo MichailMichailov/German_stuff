@@ -47,8 +47,8 @@ interface PropsTypeAdmin {
     updateWorkerThunk:(token:string, id:string, data:any)=>void;
     data: {
         id: number; Name: string; Note: string;
-        listOfInstrument: { Name: string; Status: boolean }[];
-        ListOfWork: { Name: string; Status: boolean }[];
+        listOfInstrument: { id:number, Name: string; Status: boolean }[];
+        ListOfWork: {id:number, Name: string; Status: boolean }[];
     }[];
     login:string,
     id: string,
@@ -56,7 +56,6 @@ interface PropsTypeAdmin {
 }
 
 export const WorkerCenter: FC<PropsTypeAdmin> = (props) => {
-    console.log(props)
     const [selectedId, setSelectedId] = useState<number>(0);
     const [note, setNote] = useState<string>('');
     const [listOfWork, setListOfWork] = useState<any>([]);
@@ -66,21 +65,22 @@ export const WorkerCenter: FC<PropsTypeAdmin> = (props) => {
         const aFunc = async () => { await props.setWorkerByIdThunk(props.token, props.id)}
         aFunc()
     }, []);
-    const changeClient = (id: number) => {
-        setSelectedId(id);
-        setNote(props.data[id].Note);
-        setListOfWork(props.data[id].ListOfWork);
-        setListOfInstrument(props.data[id].listOfInstrument);
-    };
+    useEffect(()=>{
+        const result = props.data.find(k => k.id === selectedId);
+        if(result){
+            setNote(result.Note?result.Note:'');
+            setListOfWork(result.ListOfWork?result.ListOfWork:[]);
+            setListOfInstrument(result.listOfInstrument?result.listOfInstrument:[]);
+        }
+    },[selectedId])
     const updateListOfWork = (newList: { Name: string; Status: boolean }[]) => setListOfWork(newList);
     const updateListOfInstrument = (newList: { Name: string; Status: boolean }[]) => setListOfInstrument(newList);
     const handleSave = async() => {
         const finalData = {
-            selectedId: props.data[selectedId].id,
-            name: props.data[selectedId].Name,
+            selectedId: selectedId,
             note, listOfWork, listOfInstrument,
         };
-        props.updateWorkerThunk(props.token, props.id, finalData)
+        await props.updateWorkerThunk(props.token, props.id, finalData)
     };
 
     return (
@@ -96,9 +96,10 @@ export const WorkerCenter: FC<PropsTypeAdmin> = (props) => {
                         <div className={st.chose__container}>
                             <div className={st.chose__container_text}>Kunde wählen:</div>
                             <div className={st.chose__container_select}>
-                                <select value={selectedId} onChange={(e) => changeClient(parseInt(e.target.value))}>
+                                <select value={selectedId} onChange={(e) => setSelectedId(parseInt(e.target.value))}>
+                                    <option key={-1} value={-1}> c.Name </option>
                                     {props.data.map((c, i) => (
-                                        <option key={c.id} value={i}> {c.Name} </option>
+                                        <option key={c.id} value={c.id}> {c.Name} </option>
                                     ))}
                                 </select>
                             </div>
