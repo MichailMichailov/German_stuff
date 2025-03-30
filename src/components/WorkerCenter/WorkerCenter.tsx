@@ -56,6 +56,7 @@ interface PropsTypeAdmin {
 }
 
 export const WorkerCenter: FC<PropsTypeAdmin> = (props) => {
+    console.log(props)
     const [selectedId, setSelectedId] = useState<number>(0);
     const [note, setNote] = useState<string>('');
     const [listOfWork, setListOfWork] = useState<any>([]);
@@ -97,7 +98,7 @@ export const WorkerCenter: FC<PropsTypeAdmin> = (props) => {
                             <div className={st.chose__container_text}>Kunde wählen:</div>
                             <div className={st.chose__container_select}>
                                 <select value={selectedId} onChange={(e) => setSelectedId(parseInt(e.target.value))}>
-                                    <option key={-1} value={-1}> c.Name </option>
+                                    <option key={-1} value={-1}> Niemand </option>
                                     {props.data.map((c, i) => (
                                         <option key={c.id} value={c.id}> {c.Name} </option>
                                     ))}
