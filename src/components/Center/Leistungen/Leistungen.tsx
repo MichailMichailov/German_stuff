@@ -72,7 +72,7 @@ export const Leistungen: FC<PropsType> = (props) => {
                     <div className={st.list + ' list'}>
                         <div className='list__title'>Leistungen</div>
                         <ul>
-                            {props.solutions.map(e => (
+                            {props.solutions&&props.solutions.map(e => (
                                 <li className={e.id == activId ? 'list__choose' : ''}
                                     onClick={event => { setActivId(e.id) }}>{e.name}</li>
                             ))}

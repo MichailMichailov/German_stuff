@@ -58,7 +58,7 @@ export const Material: FC<PropsType> = (props) =>{
                     <div className={st.list + ' list'}>
                         <div className='list__title'>Material</div>
                         <ul>
-                            {props.materials.map(e=>(
+                            {props.materials&& props.materials.map(e=>(
                                 <li className={e.id == activId?'list__choose':''} 
                                 onClick={event => { setActivId(e.id) }}>{e.name}</li>
                             ))}
