@@ -106,7 +106,7 @@ export const Kunden: FC<PropsType> = (props) => {
                         <div className={st.btns__item + ' btn'}>Drucken</div>
                     </div>
                     <form action="" className={'adminForm ' + st.form}>
-                        <h2>Customer Information</h2>
+                        <h2>Kunden Information</h2>
                         <fieldset className='adminForm__specfieldset'>
                             <div className="">
                                 <div><label htmlFor="name">Name</label></div>
@@ -117,14 +117,14 @@ export const Kunden: FC<PropsType> = (props) => {
                             </div>
 
                             <div className="">
-                                <div><label htmlFor="address">Address</label></div>
+                                <div><label htmlFor="address">Adresse</label></div>
                                 <div>
                                     <input type="text" id="address" value={address}
                                         onChange={(e) => setAddress(e.target.value)} required />
                                 </div>
                             </div>
                             <div className="">
-                                <div><label htmlFor="telephone">Telephone</label></div>
+                                <div><label htmlFor="telephone">Telefonnummer</label></div>
                                 <div>
                                     <input type="text" id="telephone" value={telephone}
                                         onChange={(e) => setTelephone(e.target.value)} required />
@@ -139,7 +139,7 @@ export const Kunden: FC<PropsType> = (props) => {
                             </div>
                         </fieldset>
                         <div className='btns btnsR'>
-                            <button className='btn' onClick={handleSave} type='button'>Change</button>
+                            <button className='btn' onClick={handleSave} type='button'>Ändern</button>
                             <button className='btn btnRed btnImg' type="button" onClick={deleteKunden}><div className={st.img}><img src={trash} alt="" /></div></button>
                         </div>
                     </form>
@@ -150,7 +150,7 @@ export const Kunden: FC<PropsType> = (props) => {
                                 <thead>
                                     <tr>
                                         <th>Tatigkeit</th><th>Mitarbeiter</th>
-                                        <th>Date</th>
+                                        <th>Datum</th>
                                         <th>Intervall in Tage</th> <th></th>
                                     </tr>
                                 </thead>

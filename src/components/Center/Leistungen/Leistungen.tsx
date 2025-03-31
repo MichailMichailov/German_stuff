@@ -84,7 +84,7 @@ export const Leistungen: FC<PropsType> = (props) => {
                 </div>
                 <div className='partOfPanel__content_right'>
                     <form className="adminForm">
-                        <h2>Info about Leistungen</h2>
+                        <h2>Information zu Leistungen</h2>
                         <fieldset className="">
                             <div className=""><label htmlFor="name">Name</label></div>
                             <div className="">
@@ -93,7 +93,7 @@ export const Leistungen: FC<PropsType> = (props) => {
                             </div>
                         </fieldset>
                         <fieldset className="">
-                            <div className=""><label htmlFor="name">Quantity</label></div>
+                            <div className=""><label htmlFor="name">Menge</label></div>
                             <div className="">
                                 <input type="number" id="name" value={quantity}
                                     onChange={(e) => setQuantity(parseInt(e.target.value))} required />
@@ -101,7 +101,7 @@ export const Leistungen: FC<PropsType> = (props) => {
                         </fieldset>
                         <fieldset className="">
 
-                            <div className=""><label htmlFor="desc">Description</label></div>
+                            <div className=""><label htmlFor="desc">Beschreibung</label></div>
                             <div className="">
                                 <textarea id="desc" value={desc}
                                     onChange={(e) => setDesc(e.target.value)} required />
@@ -121,7 +121,7 @@ export const Leistungen: FC<PropsType> = (props) => {
                                     <tr>
                                         <th>Material Name</th>
                                         <th>Menge</th>
-                                        <th>Is Consumable</th>
+                                        <th>Ist Verbrauchsmaterial</th>
                                         <th>Aktion</th>
                                     </tr>
                                 </thead>
