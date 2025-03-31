@@ -57,7 +57,12 @@ export const kundenApi = {
     getAllKunden(token:string) {
         return instance.get('api/kundens/',
             { headers: { "Content-Type": "application/json", 'Authorization': `Token ${token}`} }
-        ).then(response => response.data)
+        ).then(response => {
+            return instance.get('api/kundens/',
+                { headers: { "Content-Type": "application/json", 'Authorization': `Token ${token}`} }
+            ).then(response => response.data)
+        })
+        
         // return kunden
     },
     changeKundenById(token:string, id: string, body: any) {
