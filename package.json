@@ -2,7 +2,6 @@
   "name": "kaput",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://michailmichailov.github.io/doicheStuka/",
   "dependencies": {
     "@reduxjs/toolkit": "^2.6.1",
     "@testing-library/dom": "^10.4.0",

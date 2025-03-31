@@ -10,7 +10,6 @@ interface PropsType {
 }
 
 export const StatusMessage: FC<PropsType> = (props) => {
-    console.log(props)
     const [isVisible, setIsVisible] = useState(false);
     const [isSaved, setIsSaved] = useState(false);
     const isAutoUpdate = useRef(true);

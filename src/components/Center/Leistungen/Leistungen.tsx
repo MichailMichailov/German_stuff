@@ -23,8 +23,6 @@ interface PropsType {
 }
 
 export const Leistungen: FC<PropsType> = (props) => {
-    console.log(props.materials)
-    console.log(props.solutions)
     const [activId, setActivId] = useState("");
     const [name, setName] = useState("");
     const [desc, setDesc] = useState("");

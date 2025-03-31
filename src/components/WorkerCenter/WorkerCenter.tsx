@@ -56,7 +56,6 @@ interface PropsTypeAdmin {
 }
 
 export const WorkerCenter: FC<PropsTypeAdmin> = (props) => {
-    console.log(props)
     const [selectedId, setSelectedId] = useState<number>(0);
     const [note, setNote] = useState<string>('');
     const [listOfWork, setListOfWork] = useState<any>([]);

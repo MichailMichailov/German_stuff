@@ -15,7 +15,6 @@ interface PropsType {
 }
 
 export const Dashboard: FC<PropsType> = (props) => {
-    console.log(props.dashboard)
     // const [currentPage, setCurrentPage] = useState(1);
     // const totalPages = Math.ceil(50);
     // const handlePageChange = (page: number) => {
