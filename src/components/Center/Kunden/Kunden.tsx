@@ -90,7 +90,7 @@ export const Kunden: FC<PropsType> = (props) => {
                     <div className={st.employees + ' list'}>
                         <div className='list__title'>Kunden</div>
                         <ul>
-                            {props.kundens.map(e => (
+                            { props.kundens && props.kundens.map(e => (
                                 <li className={e.id == activId ? 'list__choose' : ''}
                                     onClick={event => { setActivId(e.id) }}>{e.name}</li>))}
                         </ul>

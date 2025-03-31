@@ -2,7 +2,8 @@ import axios from 'axios'
 import { materials, workerById, users, Arbeitsplane, kunden, solutionsFull, allWorkersData, dashboardData } from '../data/TestData'
 
 const instance = axios.create({
-    baseURL: 'http://127.0.0.1:8000/',
+    // baseURL: 'http://127.0.0.1:8000/',
+    baseURL: 'https://cf5d-149-102-246-6.ngrok-free.app/',
     //withCredentials:true
 })
 
