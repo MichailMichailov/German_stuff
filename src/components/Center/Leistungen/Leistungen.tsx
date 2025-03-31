@@ -61,7 +61,9 @@ export const Leistungen: FC<PropsType> = (props) => {
         await props.changeSolutionByIdThunk(props.token, activId, customerData)
     };
     const changeMaterial = (id: number, newId: string) => { setMaterials(prev => prev.map((m, i) => (i === id ? newId : m)))};
-    const addMaterial = () => { setMaterials(prev => [...prev, "0"]) }
+    const addMaterial = () => {  
+        setMaterials(prev => [...prev, (props.materials.length>0?props.materials[0].id:'')]) 
+    }
     const deleteMaterial = (id: number) => { setMaterials(prev => prev.filter((_, i) => i !== id)) }
     return (
         <div className={st.Leistungen + ' partOfPanel'}>

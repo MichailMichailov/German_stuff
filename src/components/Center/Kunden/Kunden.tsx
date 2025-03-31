@@ -65,8 +65,10 @@ export const Kunden: FC<PropsType> = (props) => {
     
     const addSolution = () =>{ 
         const today = new Date().toISOString().split('T')[0];
+        let solId =  props.solutions.length>0?props.solutions[0].id:''
+        let woId = props.workers.length>0?props.workers[0].id:''
         setSolutions(prev => [ 
-            ...prev,  { id:-1,solutionId: '', workerId: '', interval: 0, date:today, quantity:0} ])
+            ...prev,  { id:-1,solutionId:solId, workerId: woId, interval: 0, date:today, quantity:0} ])
         }
     const deleteSolution = (id:number) =>{ setSolutions(prev => prev.filter((_, i) => i !== id))}
     const changeSolution = (index: number, newSolutionId: string) => { 
