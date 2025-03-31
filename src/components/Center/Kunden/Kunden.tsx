@@ -156,7 +156,7 @@ export const Kunden: FC<PropsType> = (props) => {
                                 </thead>
                                 <tbody>
                                     {solutions.map((s: Solution, id: number) => {
-                                        let interv = props.solutions.filter(e => s.solutionId == e.id)
+                                        let interv = props.solutions?props.solutions.filter(e => s.solutionId == e.id):[]
                                         let intv = interv.length > 0? interv[0].quantity:0 
                                         return (<tr>
                                             <td>

@@ -127,12 +127,12 @@ export const Leistungen: FC<PropsType> = (props) => {
                                 </thead>
                                 <tbody>
                                     {materials.map((m: string, id: number) => {
-                                        let maT = props.materials.filter(s => s.id == m)[0]
+                                        let maT = props.materials?props.materials.filter(s => s.id == m)[0]:{ id: 'None', is_consumable: false, menge: 0 }
                                         const mat = maT ? maT : { id: 'None', is_consumable: false, menge: 0 }
                                         return (<tr >
                                             <td>
                                                 <select name="" id="" onChange={(e) => changeMaterial(id, e.target.value)}>{
-                                                    props.materials.map(mat => (<option key={mat.id} value={mat.id} selected={m == mat.id}>{mat.name}</option>))
+                                                    props.materials&&props.materials.map(mat => (<option key={mat.id} value={mat.id} selected={m == mat.id}>{mat.name}</option>))
                                                 }</select>
                                             </td>
                                             <td>{mat.menge}</td> <td>{mat.is_consumable ? "Ja" : "nein"}</td>
