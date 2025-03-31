@@ -39,13 +39,15 @@ export const Kunden: FC<PropsType> = (props) => {
         aFunc()
     }, []);
     useEffect(() => {
-        const result = props.kundens.find(k => k.id === activId);
-        if (result) {
-            setName(result.name?result.name:'')
-            setAddress(result.address?result.address:'')
-            setTelephone(result.phone?result.phone:'')
-            setEmail(result.email?result.email:'')
-            setSolutions(result.solutions?result.solutions:[])
+        if(props.kundens){
+            const result = props.kundens.find(k => k.id === activId);
+            if (result) {
+                setName(result.name?result.name:'')
+                setAddress(result.address?result.address:'')
+                setTelephone(result.phone?result.phone:'')
+                setEmail(result.email?result.email:'')
+                setSolutions(result.solutions?result.solutions:[])
+            }
         }else{
             setName('')
             setAddress('')
@@ -53,6 +55,7 @@ export const Kunden: FC<PropsType> = (props) => {
             setEmail('')
             setSolutions([])
         }
+        
     }, [activId])
 
     const addKunden = async() =>{ await props.addKundenThunk(props.token, {name:"new Kunden"}) }

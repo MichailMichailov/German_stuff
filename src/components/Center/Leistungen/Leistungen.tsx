@@ -37,12 +37,14 @@ export const Leistungen: FC<PropsType> = (props) => {
         aFunc()
     }, []);
     useEffect(() => {
-        const result = props.solutions.find(k => k.id === activId);
-        if (result) {
-            setName(result.name ? result.name : '')
-            setDesc(result.description ? result.description : '')
-            setMaterials(result.materials ? result.materials : [])
-            setQuantity(result.quantity? result.quantity:0)
+        if( props.solutions){
+            const result = props.solutions.find(k => k.id === activId);
+            if (result) {
+                setName(result.name ? result.name : '')
+                setDesc(result.description ? result.description : '')
+                setMaterials(result.materials ? result.materials : [])
+                setQuantity(result.quantity? result.quantity:0)
+            }
         }else{
             setName( '')
             setDesc('')

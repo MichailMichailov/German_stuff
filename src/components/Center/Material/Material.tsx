@@ -28,13 +28,16 @@ export const Material: FC<PropsType> = (props) =>{
         aFunc()
     }, []);
     useEffect(() => {
-        const result = props.materials.find(k => k.id === activId);
-        if (result) {
-            setMName(result.name?result.name:'')
-            setdesc(result.description?result.description:'')
-            setMenge(result.menge?result.menge:0 )
-            setCons(result.is_consumable?result.is_consumable:false)
-        }else{
+        if(props.materials){
+            const result = props.materials.find(k => k.id === activId);
+            if (result) {
+                setMName(result.name?result.name:'')
+                setdesc(result.description?result.description:'')
+                setMenge(result.menge?result.menge:0 )
+                setCons(result.is_consumable?result.is_consumable:false)
+            }
+        }
+        else{
             setMName('')
             setdesc('')
             setMenge(0)

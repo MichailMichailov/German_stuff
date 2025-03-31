@@ -26,10 +26,12 @@ export const Mitarbeiter: FC<PropsType> = (props) =>{
         aFunc()
     }, []);
     useEffect(() => {
-        const result = props.workers.find(k => k.id === activId);
-        if (result) {
-            setLogin(result.login?result.login:'')
-            setPass(result.password?result.password:'')
+        if(props.workers){
+            const result = props.workers.find(k => k.id === activId);
+            if (result) {
+                setLogin(result.login?result.login:'')
+                setPass(result.password?result.password:'')
+            }
         }else{
             setLogin('')
             setPass('')
