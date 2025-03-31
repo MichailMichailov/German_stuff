@@ -62,7 +62,7 @@ export const Leistungen: FC<PropsType> = (props) => {
     };
     const changeMaterial = (id: number, newId: string) => { setMaterials(prev => prev.map((m, i) => (i === id ? newId : m)))};
     const addMaterial = () => {  
-        setMaterials(prev => [...prev, (props.materials.length>0?props.materials[0].id:'')]) 
+        setMaterials(prev => [...prev, (props.materials?props.materials.length>0?props.materials[0].id:'':'')]) 
     }
     const deleteMaterial = (id: number) => { setMaterials(prev => prev.filter((_, i) => i !== id)) }
     return (
