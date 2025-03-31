@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from 'react'
 import st from './Arbeitsplane.module.scss'
 import { connect } from "react-redux";
 import { getPlanByDataThunk } from '../../../redux/reducers/adminReducer';
-import { data } from 'react-router-dom';
+import { getCurrentData2 } from '../../common/functions';
 
 interface Plans { name: string; service: { name: string; status: boolean }[] }
 
@@ -17,10 +17,12 @@ interface PropsType {
 }
 
 export const Arbeitsplane: FC<PropsType> = (props) => {
-    console.log(props.data)
     const [activeWork, setactiveWork] = useState("");
-    const [selectedDate, setSelectedDate] = useState("");
+    const [selectedDate, setSelectedDate] = useState('');
     const [activeData, setActiveData] = useState<any>([]);
+    useEffect(()=>{
+        setSelectedDate(getCurrentData2())
+    },[])
     useEffect(() => {
         const fetchPlan = async () => { await props.getPlanByDataThunk(props.token, selectedDate)}
         fetchPlan();

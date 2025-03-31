@@ -69,7 +69,6 @@ export const getPlanByDataThunk = (token:string, data:string)=>{
         dispatch(setIsFetching(true))
         try {
             const result = await adminApi.getArbitplansByData(token, data)
-            console.log(result)
             if(result){
             dispatch(setPlan(result.list))
             } 

@@ -3,6 +3,7 @@ import { FC, useEffect, useRef, useState } from 'react'
 import st from './Material.module.scss'
 import { addMaterialThunk, changeMaterialByIdThunk, deleteMaterialByIdThunk, getMaterialsThunk } from "../../../redux/reducers/adminReducer";
 import { connect } from "react-redux";
+import { StatusMessage } from "../../common/StatusMessage/StatusMessage";
 
 interface PropsType {
     getMaterialsThunk: (token:string) => void,
@@ -21,15 +22,12 @@ export const Material: FC<PropsType> = (props) =>{
     const [desc, setdesc] = useState("");
     const [menge, setMenge] = useState(0);
     const [cons, setCons] = useState(false);
-    const [statusSave, setStatusSave] = useState(false)
-    const isAutoUpdate = useRef(true);
-    useEffect(()=>{!isAutoUpdate.current&&setStatusSave(true)},[mName, desc,menge,cons ])
+    const [signal, setSignal] = useState(false);
     useEffect(() => {
         const aFunc = async () => { await props.getMaterialsThunk(props.token) }
         aFunc()
     }, []);
     useEffect(() => {
-        isAutoUpdate.current = true;
         const result = props.materials.find(k => k.id === activId);
         if (result) {
             setMName(result.name?result.name:'')
@@ -42,8 +40,6 @@ export const Material: FC<PropsType> = (props) =>{
             setMenge(0)
             setCons(false)
         }
-        setStatusSave(false);
-        setTimeout(() => { isAutoUpdate.current = false; }, 0);
     }, [activId])
     const addMaterial = async() =>{ await props.addMaterialThunk(props.token, {name:'new Material'})}
     const deleteMaterial = async() =>{ 
@@ -51,7 +47,7 @@ export const Material: FC<PropsType> = (props) =>{
         setActivId('')
     }
     const handleSave = async() => {
-        setStatusSave(false);
+        setSignal(!signal)
         const customerData = { name: mName, description: desc, menge: menge, is_consumable: cons};
         await props.changeMaterialByIdThunk(props.token, activId, customerData)
     };
@@ -106,8 +102,8 @@ export const Material: FC<PropsType> = (props) =>{
                             <button className='btn' type="button" onClick={handleSave}>Change</button>
                             <button className='btn btnRed' type="button" onClick={deleteMaterial}>Delete</button>
                         </div>
-                        <div className={'panel adminForm__panel ' + (statusSave?'panelChange':'')}>Daten {statusSave?'nicht ':''}gespeichert</div>
-                        
+                        <StatusMessage dependencies={[mName, desc,menge,cons ]} 
+                            activId={activId} signal={signal} type={false}/>
                     </form>
                 </div>
             </div>

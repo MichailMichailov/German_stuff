@@ -31,7 +31,8 @@ export const Dashboard: FC<PropsType> = (props) => {
         }
         fetchPlan();
     }, [currentData]);
-    
+    const eportExel = ()=>{ alert('exel')}
+    const printNow = () =>{alert('print')}
     return (
         <div className={st.Dashboard}>
             <div className="container">
@@ -78,8 +79,8 @@ export const Dashboard: FC<PropsType> = (props) => {
                     </div>
                 </div> */}
                 <div className={st.btns}>
-                    <div className={st.btns__item + ' btn'}>Exportieren</div>
-                    <div className={st.btns__item + ' btn'}>Drucken</div>
+                    <div className={st.btns__item + ' btn'} onClick={eportExel}>Exportieren</div>
+                    <div className={st.btns__item + ' btn'} onClick={printNow}>Drucken</div>
                 </div>
             </div>
         </div>

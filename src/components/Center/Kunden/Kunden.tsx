@@ -3,6 +3,7 @@ import st from './Kunden.module.scss'
 import trash from '../../../assets/img/trsh.png'
 import { connect } from "react-redux";
 import { addKundenThunk, changeKundenByIdThunk, deleteKundenByIdThunk, getKundensThunk, getSolutionsThunk, getWorkersThunk } from '../../../redux/reducers/adminReducer';
+import { StatusMessage } from '../../common/StatusMessage/StatusMessage';
 interface Solution { solutionId: string; workerId: string; date:string, id:number }
 interface PropsType {
     getKundensThunk: (token:string) => void,
@@ -28,9 +29,7 @@ export const Kunden: FC<PropsType> = (props) => {
     const [telephone, setTelephone] = useState("");
     const [email, setEmail] = useState("");
     const [solutions, setSolutions] = useState<Solution[]>([]);
-    const [statusSave, setStatusSave] = useState(false)
-    const isAutoUpdate = useRef(true);
-    useEffect(()=>{!isAutoUpdate.current&&setStatusSave(true)},[name, address,telephone,email, solutions ])
+    const [signal, setSignal] = useState(false);
     useEffect(() => {
         const aFunc = async () => {
             await props.getKundensThunk(props.token)
@@ -40,23 +39,26 @@ export const Kunden: FC<PropsType> = (props) => {
         aFunc()
     }, []);
     useEffect(() => {
-        isAutoUpdate.current = true;
         const result = props.kundens.find(k => k.id === activId);
         if (result) {
-            setName(result.name)
-            setAddress(result.address)
-            setTelephone(result.phone)
-            setEmail(result.email)
-            setSolutions(result.solutions)
+            setName(result.name?result.name:'')
+            setAddress(result.address?result.address:'')
+            setTelephone(result.phone?result.phone:'')
+            setEmail(result.email?result.email:'')
+            setSolutions(result.solutions?result.solutions:[])
+        }else{
+            setName('')
+            setAddress('')
+            setTelephone('')
+            setEmail('')
+            setSolutions([])
         }
-        setStatusSave(false);
-        setTimeout(() => { isAutoUpdate.current = false; }, 0);
     }, [activId])
 
     const addKunden = async() =>{ await props.addKundenThunk(props.token, {name:"new Kunden"}) }
     const deleteKunden = async() =>{ await props.deleteKundenByIdThunk(props.token, activId) }
     const handleSave = async() => {
-        setStatusSave(false);
+        setSignal(!signal)
         const customerData = { name, address, phone: telephone,email,solutions:solutions.map(e=>({ solutionId:parseInt(e.solutionId),workerId: parseInt(e.workerId), date:e.date, id:e.id }))};
         await props.changeKundenByIdThunk(props.token, activId, customerData)
     }
@@ -171,7 +173,8 @@ export const Kunden: FC<PropsType> = (props) => {
 
                         <div className={st.table__btnAdd}>
                             <div className={st.table__btnAdd_btn} onClick={addSolution} >+</div>
-                            <div className={'panel ' + (statusSave?'panelChange':'')}>Daten {statusSave?'nicht ':''}gespeichert</div>
+                            <StatusMessage dependencies={[name, address,telephone,email, solutions ]} 
+                            activId={activId} signal={signal} type={true}/>
                             <div className={st.table__btnAdd_btn} onClick={handleSave}>✔</div>
                         </div>
                     </div>
