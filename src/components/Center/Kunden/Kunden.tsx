@@ -4,7 +4,7 @@ import trash from '../../../assets/img/trsh.png'
 import { connect } from "react-redux";
 import { addKundenThunk, changeKundenByIdThunk, deleteKundenByIdThunk, getKundensThunk, getSolutionsThunk, getWorkersThunk } from '../../../redux/reducers/adminReducer';
 import { StatusMessage } from '../../common/StatusMessage/StatusMessage';
-interface Solution { solutionId: string; workerId: string; date:string, id:number }
+interface Solution { solutionId: string; workerId: string; date:string, id:number, interval:number }
 interface PropsType {
     getKundensThunk: (token:string) => void,
     getSolutionsThunk: (token:string) => void,
@@ -59,7 +59,7 @@ export const Kunden: FC<PropsType> = (props) => {
     const deleteKunden = async() =>{ await props.deleteKundenByIdThunk(props.token, activId) }
     const handleSave = async() => {
         setSignal(!signal)
-        const customerData = { name, address, phone: telephone,email,solutions:solutions.map(e=>({ solutionId:parseInt(e.solutionId),workerId: parseInt(e.workerId), date:e.date, id:e.id }))};
+        const customerData = { name, address, phone: telephone,email,solutions:solutions.map(e=>({ solutionId:parseInt(e.solutionId),workerId: parseInt(e.workerId), date:e.date, id:e.id, interval:e.interval }))};
         await props.changeKundenByIdThunk(props.token, activId, customerData)
     }
     
@@ -77,6 +77,9 @@ export const Kunden: FC<PropsType> = (props) => {
     }
     const changeDate = (index: number, newDate: string) => {
         setSolutions(prev => prev.map((solution, i) => i === index ? { ...solution, date: newDate } : solution ))
+    }
+    const changeInterval = (index: number, newInerval: number) => {
+        setSolutions(prev => prev.map((solution, i) => i === index ? { ...solution, interval: newInerval } : solution ))
     }
     return (
         <div className={st.Kunden}>
@@ -162,7 +165,7 @@ export const Kunden: FC<PropsType> = (props) => {
                                                 </select> 
                                             </td>
                                             <td><input type="date" name="" id="" value={s.date} onChange={e=>changeDate(id, e.target.value)}/></td>
-                                            <td>{intv}</td>
+                                            <td><input type="number" value={s.interval} onChange={e=>changeInterval(id, parseInt(e.target.value))}/></td>
                                             <td><div className={st.img} onClick={() => { deleteSolution(id) }}><img src={trash} alt="" /></div></td>
                                         </tr>
                                         )
