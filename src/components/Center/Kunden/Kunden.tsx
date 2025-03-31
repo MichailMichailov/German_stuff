@@ -161,12 +161,12 @@ export const Kunden: FC<PropsType> = (props) => {
                                         return (<tr>
                                             <td>
                                                 <select onChange={(e) => changeSolution(id, e.target.value)}>
-                                                    {props.solutions.map(e => (
+                                                    {props.solutions&&props.solutions.map(e => (
                                                         <option value={e.id} selected={s.solutionId == e.id}>{e.name}</option>))}
                                                 </select> </td>
                                             <td> 
                                                 <select onChange={(e) => changeWorker(id, e.target.value)}>
-                                                    {props.workers.map(e => (<option value={e.id} selected={s.workerId == e.id}>{e.login}</option>))}
+                                                    {props.workers&&props.workers.map(e => (<option value={e.id} selected={s.workerId == e.id}>{e.login}</option>))}
                                                 </select> 
                                             </td>
                                             <td><input type="date" name="" id="" value={s.date} onChange={e=>changeDate(id, e.target.value)}/></td>
