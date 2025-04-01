@@ -6,6 +6,7 @@ import { logOutThunk } from "../../redux/reducers/authReducer";
 import { getCurrentData } from "../common/functions";
 import { setWorkerByIdThunk, updateWorkerThunk } from "../../redux/reducers/workerReducer";
 import { Preload } from "../common/preload/preload";
+import { PopupMessager } from "../common/PopupMessager/PopupMessager";
 
 interface PropsTypeList {
     selectedId: number;
@@ -61,6 +62,8 @@ export const WorkerCenter: FC<PropsTypeAdmin> = (props) => {
     const [listOfWork, setListOfWork] = useState<any>([]);
     const [listOfInstrument, setListOfInstrument] = useState<any>([]);
     const formattedDate = getCurrentData();
+    const [message, setMessage] = useState('')
+    const cleanMessage = ()=>{setMessage('')}
     useEffect(() => {
         const aFunc = async () => { await props.setWorkerByIdThunk(props.token, props.id)}
         aFunc()
@@ -81,13 +84,15 @@ export const WorkerCenter: FC<PropsTypeAdmin> = (props) => {
             note, listOfWork, listOfInstrument,
         };
         await props.updateWorkerThunk(props.token, props.id, finalData)
+        setMessage('Daten wurden erfolgreich gespeichert')
     };
 
     return (
         <div className={st.workerCenter}>
+            <PopupMessager message={message} cleanError={cleanMessage} type={1}/>
             <header className={st.wHeader}>
                 <div className={st.wHeader__img}> <img src={logo} alt="Logo" /> </div>
-                <div className={st.wHeader__logOut} onClick={props.logOutThunk}> LogOut </div>
+                <div className={st.wHeader__logOut} onClick={props.logOutThunk}> Abmeldung </div>
             </header>
             <main className={st.wMain}>
                 <div className="container">

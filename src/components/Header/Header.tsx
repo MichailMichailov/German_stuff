@@ -29,7 +29,7 @@ export const Header: FC<PropsType> = (props) => {
 
                     <div className={st.Header__content_right}>
                         <div className={st.btnLogaut}>
-                            <div className="" onClick={() => { props.logOutThunk() }}>Logout</div>
+                            <div className="" onClick={() => { props.logOutThunk() }}>Abmeldung</div>
                         </div>
                     </div>
                 </div>

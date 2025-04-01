@@ -108,7 +108,7 @@ export const Leistungen: FC<PropsType> = (props) => {
                             </div>
                         </fieldset>
                         <div className='btns btnsR'>
-                            <button className='btn' type="button" onClick={handleSave}>Change</button>
+                            <button className='btn' type="button" onClick={handleSave}>Ändern</button>
                             <button className='btn btnRed btnImg' type="button" onClick={deleteSolution}><div className={st.img}><img src={trash} alt="" /></div></button>
                         </div>
                     </form>

@@ -65,24 +65,24 @@ export const Mitarbeiter: FC<PropsType> = (props) =>{
 
                 <div className='partOfPanel__content_right'>
                     <form className="adminForm">
-                        <h2>Info about Mitarbeiter</h2>
+                        <h2>Informationen über Mitarbeiter</h2>
                         <fieldset>
-                            <div className=""><label htmlFor="login">Login</label></div>
+                            <div className=""><label htmlFor="login">Anmeldung</label></div>
                             <div className="">
                                 <input type="text" id="login" value={login}
                                     onChange={(e) => setLogin(e.target.value)} required />
                             </div>
                         </fieldset>
                         <fieldset>
-                            <div className=""><label htmlFor="pass">Password</label></div>
+                            <div className=""><label htmlFor="pass">Passwort</label></div>
                             <div className="">
                                 <input type="text" id="pass" value={pass}
                                     onChange={(e) => setPass(e.target.value)} required />
                             </div>
                         </fieldset>
                         <div className='btns'>
-                            <button className='btn' type="button" onClick={handleSave}>Change</button>
-                            <button className='btn btnRed' type="button" onClick={deleteWorker}>Delete</button>
+                            <button className='btn' type="button" onClick={handleSave}>Ändern</button>
+                            <button className='btn btnRed' type="button" onClick={deleteWorker}>Löschen</button>
                         </div>
                         <StatusMessage dependencies={[login, pass]} 
                         activId={activId} signal={signal} type={false}/>

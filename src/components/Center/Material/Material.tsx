@@ -99,11 +99,11 @@ export const Material: FC<PropsType> = (props) =>{
                                 <input type="checkbox" id="pass" checked = {cons}
                                     onChange={(e) => setCons(!cons)} />
                             </div>
-                            <div className="adminForm__aLabel"><label htmlFor="pass">Is Consumable</label></div>
+                            <div className="adminForm__aLabel"><label htmlFor="pass">Ist Verbrauchsmaterial</label></div>
                         </fieldset>
                         <div className='btns'>
-                            <button className='btn' type="button" onClick={handleSave}>Change</button>
-                            <button className='btn btnRed' type="button" onClick={deleteMaterial}>Delete</button>
+                            <button className='btn' type="button" onClick={handleSave}>Ändern</button>
+                            <button className='btn btnRed' type="button" onClick={deleteMaterial}>Löschen</button>
                         </div>
                         <StatusMessage dependencies={[mName, desc,menge,cons ]} 
                             activId={activId} signal={signal} type={false}/>

@@ -1,7 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { authApi } from '../../api/api'
-import { setError, setIsFetching, setParagraphThunk } from './uiReducers'
-import { setWorkerByIdThunk } from './workerReducer'
+import { setError, setIsFetching } from './uiReducers'
+
+const errorMessages = {
+    login: "Falscher Benutzername oder falsches Passwort. Bitte versuchen Sie es erneut.",
+};
 
 
 type actionType = {
@@ -52,8 +55,8 @@ export const logInThunk = (login:string, password:string)=>{
                 dispatch(setUser({login:result.login, role:result.role}))
             } 
         }catch(error){
-            dispatch(setError(error))
-            alert('login')
+            dispatch(setError(errorMessages.login))
+            // alert('login')
         }
        
         dispatch(setIsFetching(false))

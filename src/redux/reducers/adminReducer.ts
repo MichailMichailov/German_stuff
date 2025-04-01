@@ -2,6 +2,26 @@ import { createSlice } from '@reduxjs/toolkit'
 import { setError, setIsFetching } from './uiReducers'
 import { adminApi, kundenApi, SolutionsApi, materialApi, worerApi } from '../../api/api'
 
+const errorMessages = {
+    dashboard: "Fehler beim Abrufen des Dashboards. Bitte überprüfen Sie die Daten und versuchen Sie es erneut.",
+    arbitPlans: "Fehler beim Abrufen der Arbeitspläne. Bitte versuchen Sie es erneut.",
+    kundenFetch: "Fehler beim Abrufen der Kundendaten. Bitte versuchen Sie es erneut.",
+    kundenChange: "Fehler beim Ändern der Kundendaten. Bitte erneut versuchen.",
+    kundenAdd: "Fehler beim Hinzufügen eines neuen Kunden. Bitte überprüfen Sie die Eingaben.",
+    kundenDelete: "Fehler beim Löschen des Kunden. Bitte versuchen Sie es erneut.",
+    solutionsFetch: "Fehler beim Abrufen der Lösungen. Bitte erneut versuchen.",
+    solutionsChange: "Fehler beim Ändern der Option. Überprüfen Sie die Eingaben und versuchen Sie es erneut",
+    solutionsAdd: "Fehler beim Hinzufügen einer neuen Option. Bitte erneut versuchen",
+    solutionsDelete: "Fehler beim Löschen der Option. Bitte erneut versuchen.",
+    workersFetch: "Fehler beim Abrufen der Mitarbeiterdaten. Bitte erneut versuchen.",
+    workersChange: "Fehler beim Ändern der Mitarbeiterdaten. Bitte erneut versuchen.",
+    workersAdd: "Fehler beim Hinzufügen eines neuen Mitarbeiters. Bitte überprüfen Sie die Eingaben.",
+    workersDelete: "Fehler beim Löschen des Mitarbeiters. Bitte erneut versuchen.",
+    materialsFetch: "Fehler beim Abrufen der Materialdaten. Bitte erneut versuchen.",
+    materialsChange: "Fehler beim Ändern der Materialdaten. Überprüfen Sie die Eingaben und versuchen Sie es erneut.",
+    materialsAdd: "Fehler beim Hinzufügen eines neuen Materials. Bitte erneut versuchen.",
+    materialsDelete: "Fehler beim Löschen des Materials. Bitte erneut versuchen."
+};
 
 type actionType = {
     type:string
@@ -52,8 +72,8 @@ export const getDashboardByDataThunk = (token:string ,datafrom:string, dataTo:st
                dispatch(setDashboard(result.list))
             } 
         }catch(error){
-            dispatch(setError(error))
-            alert(error)
+            dispatch(setError(errorMessages.dashboard))
+            // alert(error)
         }   
 
         dispatch(setIsFetching(false))
@@ -73,8 +93,8 @@ export const getPlanByDataThunk = (token:string, data:string)=>{
             dispatch(setPlan(result.list))
             } 
         }catch(error){
-            dispatch(setError(error))
-            alert(error)
+            dispatch(setError(errorMessages.arbitPlans))
+            // alert(error)
         }   
         dispatch(setIsFetching(false))
         // return 1
@@ -91,8 +111,8 @@ export const getKundensThunk = (token:string)=>{
                 dispatch(setKundens(result.list))
             }
         }catch(error){
-            dispatch(setError(error))
-            alert(error)
+            dispatch(setError(errorMessages.kundenFetch))
+            // alert(error)
         }   
         dispatch(setIsFetching(false))
         // return 1
@@ -107,8 +127,8 @@ export const changeKundenByIdThunk = (token:string, id:string, body:any) =>{
                 dispatch(setKundens(result.list))
             }
         }catch(error){
-            dispatch(setError(error))
-            alert(error)
+            dispatch(setError(errorMessages.kundenChange))
+            // alert(error)
         }   
         dispatch(setIsFetching(false))
         // return 1
@@ -123,8 +143,8 @@ export const addKundenThunk = (token:string, body:any) =>{
                 dispatch(setKundens(result.list))
             }
         }catch(error){
-            dispatch(setError(error))
-            alert(error)
+            dispatch(setError(errorMessages.kundenAdd))
+            // alert(error)
         }   
         dispatch(setIsFetching(false))
         // return 1
@@ -139,8 +159,8 @@ export const deleteKundenByIdThunk = (token:string, id:string) =>{
                 dispatch(setKundens(result.list))
             }
         }catch(error){
-            dispatch(setError(error))
-            alert(error)
+            dispatch(setError(errorMessages.kundenDelete))
+            // alert(error)
         }   
         dispatch(setIsFetching(false))
         // return 1
@@ -156,8 +176,8 @@ export const getSolutionsThunk = (token:string) =>{
                 dispatch(setSolutions(result.list))
             }
         }catch(error){
-            dispatch(setError(error))
-            alert(error)
+            dispatch(setError(errorMessages.solutionsFetch))
+            // alert(error)
         }   
         dispatch(setIsFetching(false))
         // return 1
@@ -172,8 +192,8 @@ export const changeSolutionByIdThunk = (token:string, id:string, body:any) =>{
                 dispatch(setSolutions(result.list))
             }
         }catch(error){
-            dispatch(setError(error))
-            alert(error)
+            dispatch(setError(errorMessages.solutionsChange))
+            // alert(error)
         }   
         dispatch(setIsFetching(false))
         // return 1
@@ -188,8 +208,8 @@ export const addSolutionThunk = ( token:string, body:any) =>{
             dispatch(setSolutions(result.list))
         }
         }catch(error){
-            dispatch(setError(error))
-            alert(error)
+            dispatch(setError(errorMessages.solutionsAdd))
+            // alert(error)
         }   
         dispatch(setIsFetching(false))
         // return 1
@@ -204,8 +224,8 @@ export const deleteSolutionByIdThunk = (token:string, id:string) =>{
                 dispatch(setSolutions(result.list))
             }
         }catch(error){
-            dispatch(setError(error))
-            alert(error)
+            dispatch(setError(errorMessages.solutionsDelete))
+            // alert(error)
         }   
         dispatch(setIsFetching(false))
         // return 1
@@ -222,8 +242,8 @@ export const getWorkersThunk = (token:string) =>{
                 dispatch(setWorkers(result.list))
             }
         }catch(error){
-            dispatch(setError(error))
-            alert(error)
+            dispatch(setError(errorMessages.workersFetch))
+            // alert(error)
         }   
         dispatch(setIsFetching(false))
         // return 1
@@ -238,8 +258,8 @@ export const changeWorkerByIdThunk = (token:string,id:string, body:any) =>{
                 dispatch(setWorkers(result.list))
             }
         }catch(error){
-            dispatch(setError(error))
-            alert(error)
+            dispatch(setError(errorMessages.workersChange))
+            // alert(error)
         }        
         dispatch(setIsFetching(false))
         // return 1
@@ -254,8 +274,8 @@ export const addWorkerThunk = ( token:string, body:any) =>{
                 dispatch(setWorkers(result.list))
             }
         }catch(error){
-            dispatch(setError(error))
-            alert(error)
+            dispatch(setError(errorMessages.workersAdd))
+            // alert(error)
         } 
         dispatch(setIsFetching(false))
         // return 1
@@ -270,8 +290,8 @@ export const deleteWorkerByIdThunk = (token:string, id:string) =>{
                 dispatch(setWorkers(result.list))
             }
         }catch(error){
-            dispatch(setError(error))
-            alert(error)
+            dispatch(setError(errorMessages.workersDelete))
+            // alert(error)
         } 
         dispatch(setIsFetching(false))
         // return 1
@@ -288,8 +308,8 @@ export const getMaterialsThunk = (token:string) =>{
                 dispatch(setMaterials(result.list))
             }
         }catch(error){
-            dispatch(setError(error))
-            alert(error)
+            dispatch(setError(errorMessages.materialsFetch))
+            // alert(error)
         }   
         dispatch(setIsFetching(false))
         // return 1
@@ -304,8 +324,8 @@ export const changeMaterialByIdThunk = (token:string, id:string, body:any) =>{
                 dispatch(setMaterials(result.list))
             }
         }catch(error){
-            dispatch(setError(error))
-            alert(error)
+            dispatch(setError(errorMessages.materialsChange))
+            // alert(error)
         }   
         dispatch(setIsFetching(false))
         // return 1
@@ -320,8 +340,8 @@ export const addMaterialThunk = (token:string, body:any) =>{
                 dispatch(setMaterials(result.list))
             }
         }catch(error){
-            dispatch(setError(error))
-            alert(error)
+            dispatch(setError(errorMessages.materialsAdd))
+            // alert(error)
         }   
         dispatch(setIsFetching(false))
         // return 1
@@ -336,8 +356,8 @@ export const deleteMaterialByIdThunk = (token:string, id:string) =>{
                 dispatch(setMaterials(result.list))
             }
         }catch(error){
-            dispatch(setError(error))
-            alert(error)
+            dispatch(setError(errorMessages.materialsDelete))
+            // alert(error)
         }   
         dispatch(setIsFetching(false))
         // return 1

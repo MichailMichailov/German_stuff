@@ -33,3 +33,9 @@ export const setParagraphThunk = (numberParagraph:number) => {
         dispatch(setMenuParagrph(numberParagraph))
     }
 }
+
+export const cleanError = () => {
+    return (dispatch: Function) => {
+        dispatch(setError(''))
+    }
+}
