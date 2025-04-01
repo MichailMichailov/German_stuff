@@ -72,23 +72,23 @@ export const Material: FC<PropsType> = (props) =>{
 
                 <div className='partOfPanel__content_right'>
                     <form className="adminForm">
-                        <h2>Info about Material</h2>
+                        <h2>Informationen über Material</h2>
                         <fieldset>
-                            <div className=""><label htmlFor="mName">Material Name</label></div>
+                            <div className=""><label htmlFor="mName">Name</label></div>
                             <div className="">
                                 <input type="text" id="mName" value={mName}
                                     onChange={(e) => setMName(e.target.value)} required />
                             </div>
                         </fieldset>
                         <fieldset>
-                            <div className=""><label htmlFor="pass">Mterial Description</label></div>
+                            <div className=""><label htmlFor="pass">Beschreibung</label></div>
                             <div className="">
                                 <input type="text" id="pass" value={desc}
                                     onChange={(e) => setdesc(e.target.value)} required />
                             </div>
                         </fieldset>
                         <fieldset>
-                            <div className=""><label htmlFor="pass">Avaliable Count</label></div>
+                            <div className=""><label htmlFor="pass">Verfügbare Anzahl</label></div>
                             <div className="">
                                 <input type="number" id="pass" value={menge}
                                     onChange={(e) => setMenge(parseInt(e.target.value))} required />
