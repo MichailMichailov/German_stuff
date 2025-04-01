@@ -70,7 +70,7 @@ export const Material: FC<PropsType> = (props) =>{
                     </div>
                 </div>
 
-                <div className='partOfPanel__content_right'>
+                <div className='partOfPanel__content_right' style={{opacity:activId==''?0:1}}>
                     <form className="adminForm">
                         <h2>Informationen über Material</h2>
                         <fieldset>

@@ -82,7 +82,7 @@ export const Leistungen: FC<PropsType> = (props) => {
                         <div className='list__btnAdd' onClick={addSoluton}>+</div>
                     </div>
                 </div>
-                <div className='partOfPanel__content_right'>
+                <div className='partOfPanel__content_right' style={{opacity:activId==''?0:1}}>
                     <form className="adminForm">
                         <h2>Information zu Leistungen</h2>
                         <fieldset className="">

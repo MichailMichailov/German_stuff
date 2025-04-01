@@ -100,7 +100,7 @@ export const Kunden: FC<PropsType> = (props) => {
                         <div className='list__btnAdd' onClick={addKunden}>+</div>
                     </div>
                 </div>
-                <div className={st.Kunden__content_right}>
+                <div className={st.Kunden__content_right} style={{opacity:activId==''?0:1}}>
                     <div className={st.btns}>
                         <div className={st.btns__item + ' btn'}>Exportieren</div>
                         <div className={st.btns__item + ' btn'}>Drucken</div>
