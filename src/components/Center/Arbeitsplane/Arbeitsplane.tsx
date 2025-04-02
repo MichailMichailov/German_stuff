@@ -20,6 +20,8 @@ export const Arbeitsplane: FC<PropsType> = (props) => {
         setSelectedDate(getCurrentData2())
     },[])
     useEffect(() => {
+        setactiveWork('')
+        setActiveData('')
         const fetchPlan = async () => { await props.getPlanByDataThunk(props.token, selectedDate)}
         fetchPlan();
     }, [selectedDate]);
@@ -44,7 +46,7 @@ export const Arbeitsplane: FC<PropsType> = (props) => {
                 </div>
                 <div className={st.Arbeitsplane__content_right}>
                     <div className={st.Arbeitsplane__content_right_top}>
-                        {activeData.map((e: Plans) => (
+                        {activeData&&activeData.map((e: Plans) => (
                             <div className={'list ' + st.list}>
                                 <div className='list__title'>{e.name}</div>
                                 <div className={st.list__list}>

@@ -23,7 +23,7 @@ export const Dashboard: FC<PropsType> = (props) => {
     //     }
     //   };
     // const displayedData = data.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-    const [currentData, setCurrentData] = useState('10.01.2025 - 22.03.2025');
+    const [currentData, setCurrentData] = useState('10.01.2025 - 22.04.2025');
     useEffect(() => {
         const fetchPlan = async () => {
             const [startDate, endDate] = currentData.split(' - ');
