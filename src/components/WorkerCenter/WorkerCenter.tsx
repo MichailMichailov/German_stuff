@@ -74,6 +74,10 @@ export const WorkerCenter: FC<PropsTypeAdmin> = (props) => {
             setNote(result.Note?result.Note:'');
             setListOfWork(result.ListOfWork?result.ListOfWork:[]);
             setListOfInstrument(result.listOfInstrument?result.listOfInstrument:[]);
+        }else{
+            setNote('');
+            setListOfWork([]);
+            setListOfInstrument([]);
         }
     },[selectedId])
     const updateListOfWork = (newList: { Name: string; Status: boolean }[]) => setListOfWork(newList);
