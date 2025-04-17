@@ -1,4 +1,41 @@
-import * as XLSX from 'xlsx';
+// Входные данные
+export interface InputEntry {
+  id: number;
+  name: string;
+  company: string;
+  service: string;
+  date: string; // ISO format date string
+}
+
+// Описание одной недели
+export interface WeekRange {
+  kw: string;
+  from: Date;
+  to: Date;
+  label: string;
+}
+
+// Описание недели для вывода
+export interface WeekOutput {
+  kw: string;
+  date: string;
+}
+
+// Одно поле из результата
+export interface DashboardEntry {
+  Objektnummer: string;
+  Leistung: string[];
+  [kw: string]: string[] | number[] | string; // KW1, KW2 и т.д.
+}
+
+// Результат
+export interface DashboardResult {
+  weeks: WeekOutput[];
+  data: DashboardEntry[];
+}
+
+
+
 
 export const getCurrentData = () => {
     const date = new Date();
@@ -16,12 +53,90 @@ export const getCurrentData2 = () => {
     return `${year}-${month}-${day}`
 }
 
-export const loadToExel = (data: any) => {
-    const ws = XLSX.utils.json_to_sheet(data);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, 'example.xlsx');
-}
+
+
+export const transformDataToDashboard = (data: InputEntry[]): DashboardResult => {
+  // Преобразуем даты
+  const dates = data.map(item => new Date(item.date));
+  const minDate = new Date(Math.min(...dates.map(d => d.getTime())));
+  const maxDate = new Date(Math.max(...dates.map(d => d.getTime())));
+
+  // Получаем понедельник для любой даты
+  const getMonday = (d: Date): Date => {
+    const date = new Date(d);
+    const day = date.getDay();
+    const diff = date.getDate() - (day === 0 ? 6 : day - 1); // понедельник
+    return new Date(date.setDate(diff));
+  };
+
+  // Составляем массив недель
+  const weeks: WeekRange[] = [];
+  let currentMonday = getMonday(minDate);
+  let weekNumber = 1;
+
+  while (currentMonday <= maxDate) {
+    const monday = new Date(currentMonday);
+    const friday = new Date(monday);
+    friday.setDate(friday.getDate() + 4);
+
+    weeks.push({
+      kw: `KW${weekNumber++}`,
+      from: new Date(monday),
+      to: new Date(friday),
+      label: `${monday.toLocaleDateString('de-DE')} - ${friday.toLocaleDateString('de-DE')}`
+    });
+
+    currentMonday.setDate(currentMonday.getDate() + 7);
+  }
+
+  // Группировка по компании и имени
+  const resultMap: { [key: string]: DashboardEntry } = {};
+
+  for (const entry of data) {
+    const key = `${entry.company}`;
+    if (!resultMap[key]) {
+      resultMap[key] = {
+        Objektnummer: entry.company,
+        Leistung: [],
+      };
+
+      // Создаем пустые KW
+      weeks.forEach((w, i) => {
+        resultMap[key][`KW${i + 1}`] = [];
+      });
+    }
+
+    const leistungList = resultMap[key].Leistung;
+    let serviceIndex = leistungList.indexOf(entry.service);
+    if (serviceIndex === -1) {
+      serviceIndex = leistungList.push(entry.service) - 1;
+    }
+
+    const entryDate = new Date(entry.date);
+    weeks.forEach((week, i) => {
+      if (entryDate >= week.from && entryDate <= week.to) {
+        const kwKey = `KW${i + 1}`;
+        const kwArray = resultMap[key][kwKey] as number[];
+        if (!kwArray.includes(serviceIndex)) {
+          kwArray.push(serviceIndex);
+        }
+      }
+    });
+  }
+
+  const weeksOutput: WeekOutput[] = weeks.map(w => ({
+    kw: w.kw,
+    date: w.label
+  }));
+
+  const dataOutput: DashboardEntry[] = Object.values(resultMap);
+
+  return {
+    weeks: weeksOutput,
+    data: dataOutput
+  };
+};
+
 
 export const transformDataToPlans = (data: any) => {
     const result: any = [];
@@ -40,19 +155,7 @@ export const transformDataToPlans = (data: any) => {
     return result;
 };
 
-export const transformDataToDashboard = (data: any) => {
-    return data.map((item: any) => ({
-        id: item.id,
-        name: item.name,
-        company: item.company,
-        service: item.service,
-        date: item.date,
-        status: item.status,
-        materials: item.materials,
-        notes: item.notes,
-        createdAt: item.createdAt
-    }));
-};
+
 
 export const printData = (htmlContent: any) => {
     const printWindow = window.open('', '', 'height=800, width=800');
@@ -67,44 +170,69 @@ export const printData = (htmlContent: any) => {
     }
 };
 
-export const generatePrintableHtml = (data: any) => {
-    const rows = data.map((item: any) => {
-        return `
+export const generatePrintableHtml = (data: any[], weeks: any[]): string => {
+  const rows: any[] = data.map((entry: any) => {
+    return entry.Leistung.map((task: string, i: number) => {
+      const row: any[] = [`${i === 0 ? entry.Objektnummer : ''}`, task];
+      weeks.forEach((w: any) => {
+        const values: any[] = entry[w.kw] || [];
+        row.push(values.includes(i) ? 'x' : '');
+      });
+      return row;
+    });
+  });
+  const headers: string[] = ['Objektnummer', 'Leistung', ...weeks.map((w: any) => w.kw)];
+  const dates: string[] = ['', '', ...weeks.map((w: any) => w.date)];
+  console.log(rows)
+  return `
+    <style>
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: Arial, sans-serif;
+        font-size: 12px;
+      }
+      th, td {
+        border: 2px solid black;
+        padding: 8px;
+        text-align: center;
+        vertical-align: middle;
+      }
+      thead th {
+        background-color: #D9D9D9;
+        font-weight: bold;
+      }
+      td {
+        background-color: #f2f2f2;
+      }
+      tr:nth-child(odd) td {
+        background-color: #ffffff;
+      }
+    </style>
+    <table>
+      <thead>
         <tr>
-          <td>${item.id}</td>
-          <td>${item.name}</td>
-          <td>${item.company}</td>
-          <td>${item.service}</td>
-          <td>${item.date}</td>
-          <td>${item.status}</td>
-          <td>${item.materials}</td>
-          <td>${item.notes}</td>
-          <td>${item.createdAt}</td>
+          ${headers.map((header: string) => `<th>${header}</th>`).join('')}
         </tr>
-      `;
-    }).join('');
-
-    return `
-      <table border="1" style="width: 100%; border-collapse: collapse;">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Company</th>
-            <th>Service</th>
-            <th>Date</th>
-            <th>Status</th>
-            <th>Materials</th>
-            <th>Notes</th>
-            <th>Created At</th>
-          </tr>
-        </thead>
+        <tr>
+          ${dates.map((date: string) => `<td>${date}</td>`).join('')}
+        </tr>
+      </thead>
         <tbody>
-          ${rows}
+          ${rows.map((row: any[]) => {
+            return row.map((rov: any[]) => {
+              return `
+                <tr>
+                  ${rov.map((cell: any) => `<td>${cell}</td>`).join('')}
+                </tr>
+              `;
+            }).join('');
+          }).join('')}
         </tbody>
-      </table>
-    `;
+    </table>
+  `;
 };
+
 
 export const generatePrintableHtmlPlans = (data:any) => {
     const rows = data.map((person:any) => {

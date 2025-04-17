@@ -2,7 +2,8 @@ import { FC, useEffect, useState } from 'react'
 import st from './Dashboard.module.scss'
 import { connect } from "react-redux";
 import { getDashboardByDataThunk } from '../../../redux/reducers/adminReducer';
-import { generatePrintableHtml, loadToExel, printData, transformDataToDashboard } from '../../common/functions';
+import { generatePrintableHtml, printData, transformDataToDashboard } from '../../common/functions';
+import { loadToExel } from '../../common/excel'; 
 
 interface PropsType {
     dashboard:  {
@@ -31,8 +32,14 @@ export const Dashboard: FC<PropsType> = (props) => {
         }
         fetchPlan();
     }, [currentData]);
-    const eportExel = ()=>{ loadToExel(transformDataToDashboard(props.dashboard))}
-    const printNow = () =>{printData(generatePrintableHtml(props.dashboard))}
+    const eportExel = ()=>{ 
+        const {weeks, data} = transformDataToDashboard(props.dashboard) 
+        loadToExel(data, weeks)
+    }
+    const printNow = () =>{
+        const {weeks, data} = transformDataToDashboard(props.dashboard) 
+        printData(generatePrintableHtml(data, weeks))
+    }
     return (
         <div className={st.Dashboard}>
             <div className="container">

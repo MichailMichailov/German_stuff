@@ -2,8 +2,8 @@ import { FC, useEffect, useState } from 'react'
 import st from './Arbeitsplane.module.scss'
 import { connect } from "react-redux";
 import { getPlanByDataThunk } from '../../../redux/reducers/adminReducer';
-import { generatePrintableHtmlPlans, getCurrentData2, loadToExel, printData, transformDataToPlans } from '../../common/functions';
-
+import { generatePrintableHtmlPlans, getCurrentData2, printData, transformDataToPlans } from '../../common/functions';
+import { loadExelOld } from '../../common/excel'; 
 interface Plans { name: string; service: { name: string; status: boolean }[] }
 
 interface PropsType {
@@ -29,7 +29,7 @@ export const Arbeitsplane: FC<PropsType> = (props) => {
         const filteredPlan = props.data.find(plan => plan.id === activeWork);
         setActiveData(filteredPlan ? filteredPlan.plans : []);
     }, [activeWork]);
-    const eportExel = ()=>{ loadToExel(transformDataToPlans(props.data)) }
+    const eportExel = ()=>{ loadExelOld(transformDataToPlans(props.data)) }
     const printNow = () =>{printData(generatePrintableHtmlPlans(props.data))}
     return (
         <div className={st.Arbeitsplane}>
