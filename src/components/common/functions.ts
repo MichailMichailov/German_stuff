@@ -55,41 +55,35 @@ export const getCurrentData2 = () => {
 
 
 
-export const transformDataToDashboard = (data: InputEntry[]): DashboardResult => {
-  // Преобразуем даты
-  const dates = data.map(item => new Date(item.date));
-  const minDate = new Date(Math.min(...dates.map(d => d.getTime())));
-  const maxDate = new Date(Math.max(...dates.map(d => d.getTime())));
-
-  // Получаем понедельник для любой даты
+export const transformDataToDashboard = (data: InputEntry[], startdate: string): DashboardResult => {
+  // Получаем понедельник от заданной стартовой даты
   const getMonday = (d: Date): Date => {
     const date = new Date(d);
     const day = date.getDay();
-    const diff = date.getDate() - (day === 0 ? 6 : day - 1); // понедельник
+    const diff = date.getDate() - (day === 0 ? 6 : day - 1); // воскресенье = 0
     return new Date(date.setDate(diff));
   };
 
-  // Составляем массив недель
+  const startDateObj = getMonday(new Date(startdate));
   const weeks: WeekRange[] = [];
-  let currentMonday = getMonday(minDate);
-  let weekNumber = 1;
 
-  while (currentMonday <= maxDate) {
-    const monday = new Date(currentMonday);
-    const friday = new Date(monday);
-    friday.setDate(friday.getDate() + 4);
+  // Формируем 52 недели с понедельника по воскресенье
+  for (let i = 0; i < 52; i++) {
+    const monday = new Date(startDateObj);
+    monday.setDate(monday.getDate() + i * 7);
+
+    const sunday = new Date(monday);
+    sunday.setDate(monday.getDate() + 6);
 
     weeks.push({
-      kw: `KW${weekNumber++}`,
-      from: new Date(monday),
-      to: new Date(friday),
-      label: `${monday.toLocaleDateString('de-DE')} - ${friday.toLocaleDateString('de-DE')}`
+      kw: `KW${i + 1}`,
+      from: monday,
+      to: sunday,
+      label: `${monday.toLocaleDateString('de-DE')} - ${sunday.toLocaleDateString('de-DE')}`
     });
-
-    currentMonday.setDate(currentMonday.getDate() + 7);
   }
 
-  // Группировка по компании и имени
+  // Группировка по компании
   const resultMap: { [key: string]: DashboardEntry } = {};
 
   for (const entry of data) {
@@ -100,8 +94,8 @@ export const transformDataToDashboard = (data: InputEntry[]): DashboardResult =>
         Leistung: [],
       };
 
-      // Создаем пустые KW
-      weeks.forEach((w, i) => {
+      // Инициализируем пустые недели
+      weeks.forEach((_, i) => {
         resultMap[key][`KW${i + 1}`] = [];
       });
     }
@@ -136,6 +130,7 @@ export const transformDataToDashboard = (data: InputEntry[]): DashboardResult =>
     data: dataOutput
   };
 };
+
 
 
 export const transformDataToPlans = (data: any) => {

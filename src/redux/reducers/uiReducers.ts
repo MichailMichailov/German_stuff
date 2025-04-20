@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { settingsApi } from '../../api/api'
 
 type actionType = {
     type:string
@@ -11,6 +12,7 @@ const uiSlice = createSlice({
         isFetching:false,
         menuParagrph:0,
         error:'',
+        date:'',
     },
     reducers:{
         setMenuParagrph(state, action:actionType){
@@ -22,9 +24,12 @@ const uiSlice = createSlice({
         setError(state, action:actionType){
             state.error = action.payload
         },
+        setDateWeek(state, action:actionType){
+            state.date = action.payload
+        },
     }
 })
-const { setMenuParagrph} = uiSlice.actions
+const { setMenuParagrph, setDateWeek} = uiSlice.actions
 export const { setIsFetching, setError} = uiSlice.actions
 export const uiReducer = uiSlice.reducer
 
@@ -37,5 +42,34 @@ export const setParagraphThunk = (numberParagraph:number) => {
 export const cleanError = () => {
     return (dispatch: Function) => {
         dispatch(setError(''))
+    }
+}
+
+export const setSettings = (token:string, date:string) => {
+    return async (dispatch: Function) => {
+        dispatch(setIsFetching(true))
+        try{
+            const result = await settingsApi.updateDate(token,date)
+            if(result){
+                dispatch(setDateWeek(result.list))
+            } 
+        }catch(error){
+            dispatch(setError('error date update'))
+        }
+        dispatch(setIsFetching(false))
+    }
+}
+export const getDate = (token:string) => {
+    return async (dispatch: Function) => {
+        dispatch(setIsFetching(true))
+        try{
+            const result = await settingsApi.getDate(token)
+            if(result){
+                dispatch(setDateWeek(result.list))
+            } 
+        }catch(error){
+            dispatch(setError('error date update'))
+        }
+        dispatch(setIsFetching(false))
     }
 }

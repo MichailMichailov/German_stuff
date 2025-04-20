@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { getDashboardByDataThunk } from '../../../redux/reducers/adminReducer';
 import { generatePrintableHtml, printData, transformDataToDashboard } from '../../common/functions';
 import { loadToExel } from '../../common/excel'; 
+import { getDate } from '../../../redux/reducers/uiReducers';
 
 interface PropsType {
     dashboard:  {
@@ -12,7 +13,9 @@ interface PropsType {
         materials: string[]; notes: string; createdAt: string;
     }[]
     token:string,
-    getDashboardByDataThunk: (token:string,dataFrom:string, dataTo:string)=>void
+    getDashboardByDataThunk: (token:string,dataFrom:string, dataTo:string)=>void,
+    getDate:(token:string)=>void,
+    date:string
 }
 
 export const Dashboard: FC<PropsType> = (props) => {
@@ -29,15 +32,16 @@ export const Dashboard: FC<PropsType> = (props) => {
         const fetchPlan = async () => {
             const [startDate, endDate] = currentData.split(' - ');
             await props.getDashboardByDataThunk(props.token, startDate, endDate)
+            await props.getDate(props.token)
         }
         fetchPlan();
     }, [currentData]);
     const eportExel = ()=>{ 
-        const {weeks, data} = transformDataToDashboard(props.dashboard) 
+        const {weeks, data} = transformDataToDashboard(props.dashboard, props.date) 
         loadToExel(data, weeks)
     }
     const printNow = () =>{
-        const {weeks, data} = transformDataToDashboard(props.dashboard) 
+        const {weeks, data} = transformDataToDashboard(props.dashboard, props.date) 
         printData(generatePrintableHtml(data, weeks))
     }
     return (
@@ -96,7 +100,8 @@ export const Dashboard: FC<PropsType> = (props) => {
 
 const mapStateToProps = (state: any) => ({
     dashboard: state.admin.dashboard,
-    token: state.auth.token
+    token: state.auth.token,
+    date:state.ui.date,
 });
 
-export const RealDashboard = connect(mapStateToProps, { getDashboardByDataThunk })(Dashboard);
+export const RealDashboard = connect(mapStateToProps, { getDashboardByDataThunk, getDate })(Dashboard);

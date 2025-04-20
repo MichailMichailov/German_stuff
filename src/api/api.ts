@@ -17,7 +17,19 @@ export const authApi = {
         //     return (users[1])
         // }
     }
+}
 
+export const settingsApi = {
+    async getDate(token:string) {
+        return instance.get("api/settings/",
+            { headers: { "Content-Type": "application/json", 'Authorization': `Token ${token}`} }
+        ).then(response => response.data)
+    }, 
+    async updateDate(token:string, date: string) {
+        return instance.put('api/settings/', {date},
+            { headers: { "Content-Type": "application/json", 'Authorization': `Token ${token}`} }
+        ).then(response=>response.data)
+    }
 }
 
 export const workerApi = {

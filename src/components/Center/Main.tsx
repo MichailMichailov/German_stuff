@@ -8,6 +8,7 @@ import { RealKunden } from "./Kunden/Kunden";
 import { RealLeistungen } from "./Leistungen/Leistungen";
 import { RealMitarbeiter } from "./Mitarbeiter/Mitarbeiter";
 import { RealMaterial } from "./Material/Material";
+import { RealSettings } from "./Settings/Settings";
 
 
 interface PropsType{
@@ -26,6 +27,7 @@ export const Main: FC<PropsType> = (props) =>{
                 <Route path='/leistungen' element={<RealLeistungen/>}/>
                 <Route path='/mitarbeiter' element={<RealMitarbeiter/>}/>
                 <Route path='/material' element={<RealMaterial/>}/>
+                <Route path='/settings' element={<RealSettings/>}/>
                 
                 {/* <Route path='/' element={<RealMainPage setPar={props.setParagraphThunk}/>} />
                 <Route path='/profile/:userId?' element={<RealProfile setPar={props.setParagraphThunk} />} />

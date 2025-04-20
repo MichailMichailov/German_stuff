@@ -18,6 +18,7 @@ export const Menu: FC<PropsType> = (props) => {
       else if (currentUrl.includes('leistungen')) { setActiveItem(3) }
       else if (currentUrl.includes('mitarbeiter')) { setActiveItem(4) }
       else if (currentUrl.includes('material')) { setActiveItem(5) }
+      else if (currentUrl.includes('settings')) { setActiveItem(6) }
       else { setActiveItem(0) }
       props.setPar(activeItem)
     }, [activeItem]);
@@ -42,6 +43,9 @@ export const Menu: FC<PropsType> = (props) => {
                 </li>
                 <li className={st.menu__items_item + ' ' + (props.numMenu == 5 && st.active)}>
                     <Link to="/material" onClick={() => { setActiveItem(5) }}>Material</Link>
+                </li>
+                <li className={st.menu__items_item + ' ' + (props.numMenu == 6 && st.active)}>
+                    <Link to="/settings" onClick={() => { setActiveItem(6) }}>Einstellungen</Link>
                 </li>
             </ul>
         </nav>
