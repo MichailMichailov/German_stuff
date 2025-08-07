@@ -1,4 +1,5 @@
 import { FC, useEffect, useState } from "react";
+import { Link, Route, Routes, Navigate } from 'react-router-dom';
 import { connect } from "react-redux";
 import st from "./WorkerCenter.module.scss";
 import logo from "../../assets/img/Uhlig-Logo-Rechteck1.png";
@@ -7,6 +8,7 @@ import { getCurrentData } from "../common/functions";
 import { setWorkerByIdThunk, updateWorkerThunk } from "../../redux/reducers/workerReducer";
 import { Preload } from "../common/preload/preload";
 import { PopupMessager } from "../common/PopupMessager/PopupMessager";
+import { RealWorkerForm } from "./workerForm/workerForm";
 
 interface PropsTypeList {
     selectedId: number;
@@ -44,16 +46,16 @@ const ListForWorker: FC<PropsTypeList> = ({ selectedId, listOfSome, title, onUpd
 
 interface PropsTypeAdmin {
     logOutThunk: () => void;
-    setWorkerByIdThunk:(token:string, id:string) => void;
-    updateWorkerThunk:(token:string, id:string, data:any)=>void;
+    setWorkerByIdThunk: (token: string, id: string) => void;
+    updateWorkerThunk: (token: string, id: string, data: any) => void;
     data: {
         id: number; Name: string; Note: string;
-        listOfInstrument: { id:number, Name: string; Status: boolean }[];
-        ListOfWork: {id:number, Name: string; Status: boolean }[];
+        listOfInstrument: { id: number, Name: string; Status: boolean }[];
+        ListOfWork: { id: number, Name: string; Status: boolean }[];
     }[];
-    login:string,
+    login: string,
     id: string,
-    token:string
+    token: string
 }
 
 export const WorkerCenter: FC<PropsTypeAdmin> = (props) => {
@@ -63,26 +65,30 @@ export const WorkerCenter: FC<PropsTypeAdmin> = (props) => {
     const [listOfInstrument, setListOfInstrument] = useState<any>([]);
     const formattedDate = getCurrentData();
     const [message, setMessage] = useState('')
-    const cleanMessage = ()=>{setMessage('')}
+    const cleanMessage = () => { setMessage('') }
     useEffect(() => {
-        const aFunc = async () => { await props.setWorkerByIdThunk(props.token, props.id)}
+        const aFunc = async () => { await props.setWorkerByIdThunk(props.token, props.id) }
         aFunc()
     }, []);
-    useEffect(()=>{
+    useEffect(() => {
         const result = props.data.find(k => k.id === selectedId);
-        if(result){
-            setNote(result.Note?result.Note:'');
-            setListOfWork(result.ListOfWork?result.ListOfWork:[]);
-            setListOfInstrument(result.listOfInstrument?result.listOfInstrument:[]);
-        }else{
+        if (result) {
+            try {
+                const parsed = JSON.parse(result.Note.replace(/'/g, '"'));
+                setNote(parsed.note ? parsed.note : '');
+            } catch {setNote(result.Note ? result.Note : ''); }
+            
+            setListOfWork(result.ListOfWork ? result.ListOfWork : []);
+            setListOfInstrument(result.listOfInstrument ? result.listOfInstrument : []);
+        } else {
             setNote('');
             setListOfWork([]);
             setListOfInstrument([]);
         }
-    },[selectedId])
+    }, [selectedId])
     const updateListOfWork = (newList: { Name: string; Status: boolean }[]) => setListOfWork(newList);
     const updateListOfInstrument = (newList: { Name: string; Status: boolean }[]) => setListOfInstrument(newList);
-    const handleSave = async() => {
+    const handleSave = async () => {
         const finalData = {
             selectedId: selectedId,
             note, listOfWork, listOfInstrument,
@@ -93,7 +99,7 @@ export const WorkerCenter: FC<PropsTypeAdmin> = (props) => {
 
     return (
         <div className={st.workerCenter}>
-            <PopupMessager message={message} cleanError={cleanMessage} type={1}/>
+            <PopupMessager message={message} cleanError={cleanMessage} type={1} />
             <header className={st.wHeader}>
                 <div className={st.wHeader__img}> <img src={logo} alt="Logo" /> </div>
                 <div className={st.wHeader__logOut} onClick={props.logOutThunk}> Abmeldung </div>
@@ -135,6 +141,9 @@ export const WorkerCenter: FC<PropsTypeAdmin> = (props) => {
                     </div>
                 </div>
             </main>
+            <div className={st.add_plan}>
+                <Link to="/workerForm">+</Link>
+            </div>
         </div>
     );
 };
@@ -147,3 +156,16 @@ const mapStateToProps = (state: any) => ({
 });
 
 export const RealWorkerCenter = connect(mapStateToProps, { logOutThunk, updateWorkerThunk, setWorkerByIdThunk })(WorkerCenter);
+
+
+export const WorkerCenterRouter = () => {
+    return (
+        <div>
+            <Routes>
+                <Route path='/' element={<RealWorkerCenter />} />
+                <Route path='/workerForm' element={<RealWorkerForm />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+        </div>
+    )
+}

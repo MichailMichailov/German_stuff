@@ -4,7 +4,7 @@ import trash from '../../../assets/img/trsh.png'
 import { connect } from "react-redux";
 import { addKundenThunk, changeKundenByIdThunk, deleteKundenByIdThunk, getKundensThunk, getSolutionsThunk, getWorkersThunk } from '../../../redux/reducers/adminReducer';
 import { StatusMessage } from '../../common/StatusMessage/StatusMessage';
-interface Solution { solutionId: string; workerId: string; date:string, id:number, interval:number }
+interface Solution { solutionId: string; workerId: string; date:string, id:number, note:string, interval:number }
 interface PropsType {
     getKundensThunk: (token:string) => void,
     getSolutionsThunk: (token:string) => void,
@@ -71,7 +71,7 @@ export const Kunden: FC<PropsType> = (props) => {
         let solId =  props.solutions?props.solutions.length>0?props.solutions[0].id:'':''
         let woId = props.workers?props.workers.length>0?props.workers[0].id:'':''
         setSolutions(prev => [ 
-            ...prev,  { id:-1,solutionId:solId, workerId: woId, interval: 0, date:today, quantity:0} ])
+            ...prev,  { id:-1,solutionId:solId, workerId: woId, interval: 0, date:today, quantity:0, note:''} ])
         }
     const deleteSolution = (id:number) =>{ setSolutions(prev => prev.filter((_, i) => i !== id))}
     const changeSolution = (index: number, newSolutionId: string) => { 
@@ -151,19 +151,26 @@ export const Kunden: FC<PropsType> = (props) => {
                                     <tr>
                                         <th>Tatigkeit</th><th>Mitarbeiter</th>
                                         <th>Datum</th>
-                                        <th>Intervall in Tage</th> <th></th>
+                                        <th>Intervall in Tage</th><th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {solutions.map((s: Solution, id: number) => {
                                         let interv = props.solutions?props.solutions.filter(e => s.solutionId == e.id):[]
                                         let intv = interv.length > 0? interv[0].quantity:0 
+                                        let isWorker = false
+                                         try{
+                                            const parsed = JSON.parse(s.note.replace(/'/g, '"'));
+                                            isWorker = true
+                                        }catch{}
                                         return (<tr>
                                             <td>
+                                                {isWorker && <span className={st.isWorker}>👷‍♂️</span>}
                                                 <select onChange={(e) => changeSolution(id, e.target.value)}>
                                                     {props.solutions&&props.solutions.map(e => (
                                                         <option value={e.id} selected={s.solutionId == e.id}>{e.name}</option>))}
-                                                </select> </td>
+                                                </select>
+                                            </td>
                                             <td> 
                                                 <select onChange={(e) => changeWorker(id, e.target.value)}>
                                                     {props.workers&&props.workers.map(e => (<option value={e.id} selected={s.workerId == e.id}>{e.login}</option>))}

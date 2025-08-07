@@ -3,19 +3,19 @@ import st from './Dashboard.module.scss'
 import { connect } from "react-redux";
 import { getDashboardByDataThunk } from '../../../redux/reducers/adminReducer';
 import { generatePrintableHtml, printData, transformDataToDashboard } from '../../common/functions';
-import { loadToExel } from '../../common/excel'; 
+import { loadToExel } from '../../common/excel';
 import { getDate } from '../../../redux/reducers/uiReducers';
 
 interface PropsType {
-    dashboard:  {
+    dashboard: {
         id: number; name: string; company: string; service: string;
-        date: string;status: string;
+        date: string; status: string;
         materials: string[]; notes: string; createdAt: string;
     }[]
-    token:string,
-    getDashboardByDataThunk: (token:string,dataFrom:string, dataTo:string)=>void,
-    getDate:(token:string)=>void,
-    date:string
+    token: string,
+    getDashboardByDataThunk: (token: string, dataFrom: string, dataTo: string) => void,
+    getDate: (token: string) => void,
+    date: string
 }
 
 export const Dashboard: FC<PropsType> = (props) => {
@@ -36,19 +36,19 @@ export const Dashboard: FC<PropsType> = (props) => {
         }
         fetchPlan();
     }, [currentData]);
-    const eportExel = ()=>{ 
-        const {weeks, data} = transformDataToDashboard(props.dashboard, props.date) 
+    const eportExel = () => {
+        const { weeks, data } = transformDataToDashboard(props.dashboard, props.date)
         loadToExel(data, weeks)
     }
-    const printNow = () =>{
-        const {weeks, data} = transformDataToDashboard(props.dashboard, props.date) 
+    const printNow = () => {
+        const { weeks, data } = transformDataToDashboard(props.dashboard, props.date)
         printData(generatePrintableHtml(data, weeks))
     }
     return (
         <div className={st.Dashboard}>
             <div className="container">
                 <div className={st.Dashboard__data}>
-                    <input type="text" value={currentData} onChange={e=>{setCurrentData(e.target.value)}}/>
+                    <input type="text" value={currentData} onChange={e => { setCurrentData(e.target.value) }} />
                 </div>
                 <div className="table__table">
                     <table>
@@ -66,18 +66,29 @@ export const Dashboard: FC<PropsType> = (props) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {props.dashboard.map(e=>(
+                            {props.dashboard.map(e => (
                                 <tr>
-                                <td>{e.id}</td>
-                                <td>{e.name}</td>
-                                <td>{e.company}</td>
-                                <td>{e.service}</td>
-                                <td>{e.date}</td>
-                                <td>{e.status}</td>
-                                <td>{e.materials}</td>
-                                <td>{e.notes}</td>
-                                <td>{e.createdAt}</td>
-                            </tr>
+                                    <td>{e.id}</td>
+                                    <td>{e.name}</td>
+                                    <td>{e.company}</td>
+                                    <td>{e.service}</td>
+                                    <td>{e.date}</td>
+                                    <td>{e.status}</td>
+                                    <td>{e.materials}</td>
+                                    <td>{(() => {
+                                        try {
+                                            const parsed = JSON.parse(e.notes.replace(/'/g, '"'));
+                                            return (<div className={st.workTask}>
+                                                <div className={st.workTasc__title}>Dies ist eine Arbeiteraufgabe</div>
+                                                <div className={st.workTasc__time}>Zeit:{parsed.timeWork} Minuten</div>
+                                                <div className={st.workTasc__note}>{parsed.note}</div>
+                                            </div>); // или выведи нужное поле
+                                        } catch {
+                                            return e.notes; // если это не JSON
+                                        }
+                                    })()}</td>
+                                    <td>{e.createdAt}</td>
+                                </tr>
                             ))}
                         </tbody>
                     </table>
@@ -101,7 +112,7 @@ export const Dashboard: FC<PropsType> = (props) => {
 const mapStateToProps = (state: any) => ({
     dashboard: state.admin.dashboard,
     token: state.auth.token,
-    date:state.ui.date,
+    date: state.ui.date,
 });
 
 export const RealDashboard = connect(mapStateToProps, { getDashboardByDataThunk, getDate })(Dashboard);

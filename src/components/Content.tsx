@@ -6,7 +6,7 @@ import { Main } from './Center/Main'
 import { Footer } from './Footer/Footer'
 import { withRouter } from '../hooks/withRoute'
 import { RealLogIn } from './Autorization/logIn'
-import { RealWorkerCenter } from './WorkerCenter/WorkerCenter'
+import { WorkerCenterRouter } from './WorkerCenter/WorkerCenter'
 import { Preload } from './common/preload/preload'
 import { PopupMessager } from './common/PopupMessager/PopupMessager'
 import { cleanError } from '../redux/reducers/uiReducers'
@@ -41,7 +41,7 @@ export const Content:FC<PropsType> = (props) => {
             <PopupMessager message={props.ErrorMessage} cleanError={props.cleanError} type={0}/>
             {props.isFetching && <Preload/>}
             {props.isAuth?
-                props.user.role=='admin'?<ContentAdmin/>:<RealWorkerCenter/>
+                props.user.role=='admin'?<ContentAdmin/>:<WorkerCenterRouter/>
                 :<RealLogIn/>}
         </div>
     )

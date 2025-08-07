@@ -39,3 +39,22 @@
         margin-left: 10px;
     }
 }
+
+.workTask {
+  border-radius: 4px;
+  padding: 10px;
+
+  .workTasc__title {
+    font-weight: bold;
+    margin-bottom: 6px;
+  }
+
+  .workTasc__time {
+    color: #555;
+    margin-bottom: 4px;
+  }
+
+  .workTasc__note {
+    color: #333;
+  }
+}

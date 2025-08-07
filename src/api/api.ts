@@ -45,6 +45,21 @@ export const workerApi = {
             { headers: { "Content-Type": "application/json", 'Authorization': `Token ${token}`} }
         ).then(response=>response.data)
         // return 0
+    },
+    getListOfClients(token:string){
+        return instance.get('api/kundenforworker/',
+            { headers: { "Content-Type": "application/json", 'Authorization': `Token ${token}`} }
+        ).then(response => response.data)
+    },
+    getListOfWorks(token:string){
+        return instance.get('api/listunforworker/',
+            { headers: { "Content-Type": "application/json", 'Authorization': `Token ${token}`} }
+        ).then(response=>response.data)
+    },
+    sendPlan(token:string, id:string, body:any){
+        return instance.post('api/sendplanfromworker/'+id, body,
+            { headers: { "Content-Type": "application/json", 'Authorization': `Token ${token}`} }
+        ).then(response=>response.data)
     }
 }
 
